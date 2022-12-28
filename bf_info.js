@@ -34,6 +34,10 @@ export class example extends plugin {
                     fnc: 'bf_weapon'
                 },
                 {
+                    reg: '^#?bf(1|5)(class(es)?).*$',
+                    fnc: 'bf_class'
+                },
+                {
                     reg: '^#?bf(1|5).*$',
                     fnc: 'bf_base'
                 },
@@ -53,10 +57,9 @@ export class example extends plugin {
         if(e.msg.indexOf("bf1")!=-1) version = "bf1"
         if(e.msg.indexOf("bf5")!=-1) version = "bf5"
         await this.reply(`${playerid}-${version}`);
-        const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=en-us`,{
+        const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
             headers: { "Accept-Encoding": "gzip,deflate,compress" }
         })
-        
         var jsonobj = response.data;
         //await this.reply((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``));
         if (jsonobj==""|[]){
@@ -74,7 +77,7 @@ export class example extends plugin {
         let message = []
         await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
         await message.push(`玩家名：${JSON.stringify(jsonobj.userName)}\n玩家等级：${JSON.stringify(jsonobj.rank)}\n技巧值：${JSON.stringify(jsonobj.skill)}\n每分钟得分：${JSON.stringify(jsonobj.scorePerMinute)}\n每分钟击杀：${JSON.stringify(jsonobj.killsPerMinute)}\n胜率：${JSON.stringify(jsonobj.winPercent)}\n最佳兵种：${JSON.stringify(jsonobj.bestClass)}\n准度：${JSON.stringify(jsonobj.accuracy)}\n爆头率：${JSON.stringify(jsonobj.headshots)}\n爆头数：${JSON.stringify(jsonobj.headShots)}\n最远爆头：${JSON.stringify(jsonobj.longestHeadShot)}\n已游玩时间：${JSON.stringify(jsonobj.timePlayed)}\nKD比：${JSON.stringify(jsonobj.killDeath)}\n击杀数：${JSON.stringify(jsonobj.kills)}\n死亡数：${JSON.stringify(jsonobj.deaths)}\n最高连续击杀：${JSON.stringify(jsonobj.highestKillStreak)}\n助攻数：${JSON.stringify(jsonobj.killAssists)}\n救起数：${JSON.stringify(jsonobj.revives)}\n治疗量：${JSON.stringify(jsonobj.heals)}\n维修量：${JSON.stringify(jsonobj.repairs)}\n`)
-        message.push(`您可使用#${version} carrier/weapon 获取载具武器数据`)
+        message.push(`\n您可使用#bf help获得更多功能命令`)
         
         let forwardMsg = await this.makeForwardMsg(`以下是您查询的${version}玩家${playerid}的综合战绩：`, message)
         await this.reply(forwardMsg)
@@ -91,7 +94,7 @@ export class example extends plugin {
         if(e.msg.indexOf("bf1")!=-1) version = "bf1"
         if(e.msg.indexOf("bf5")!=-1) version = "bf5"
         await this.reply(`${playerid}-${version}`);
-        const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=en-us`,{
+        const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
             headers: { "Accept-Encoding": "gzip,deflate,compress" }
         })
         
@@ -123,7 +126,7 @@ export class example extends plugin {
             await message.push(segment.image((JSON.stringify(jsonobj.vehicles[i].image)).replaceAll(`\"`, ``)))
             await message.push(`载具名：${JSON.stringify(jsonobj.vehicles[i].vehicleName)}\n载具种类：${JSON.stringify(jsonobj.vehicles[i].type)}\n击杀数：${JSON.stringify(jsonobj.vehicles[i].kills)}\nKPM：${JSON.stringify(jsonobj.vehicles[i].killsPerMinute)}\n摧毁载具：${JSON.stringify(jsonobj.vehicles[i].destroyed)}\n乘坐时间：${JSON.stringify(jsonobj.vehicles[i].timeIn)}\n`)
         }
-        message.push(`您可使用#${version} weapon 获取武器数据`)
+        message.push(`\n您可使用#bf help获得更多功能命令`)
         
         let forwardMsg = await this.makeForwardMsg(`以下是您查询的${version}玩家${playerid}的载具战绩：`, message)
         await this.reply(forwardMsg)
@@ -140,7 +143,7 @@ export class example extends plugin {
         if(e.msg.indexOf("bf1")!=-1) version = "bf1"
         if(e.msg.indexOf("bf5")!=-1) version = "bf5"
         await this.reply(`${playerid}-${version}`);
-        const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=en-us`,{
+        const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
             headers: { "Accept-Encoding": "gzip,deflate,compress" }
         })
         
@@ -173,6 +176,48 @@ export class example extends plugin {
             await message.push(`武器名：${JSON.stringify(jsonobj.weapons[i].weaponName)}\n武器种类：${JSON.stringify(jsonobj.weapons[i].type)}\n击杀数：${JSON.stringify(jsonobj.weapons[i].kills)}\nKPM：${JSON.stringify(jsonobj.weapons[i].killsPerMinute)}\n准度：${JSON.stringify(jsonobj.weapons[i].accuracy)}\n爆头率：${JSON.stringify(jsonobj.weapons[i].headshots)}\n命中/击杀比：${JSON.stringify(jsonobj.weapons[i].hitVKills)}\n`)
         }
         message.push(`您可使用#${version} carrier 获取载具数据`)
+        
+        let forwardMsg = await this.makeForwardMsg(`以下是您查询的${version}玩家${playerid}的武器战绩：`, message)
+        await this.reply(forwardMsg)
+        //await this.reply(JSON.stringify(jsonobj.results));
+        //await this.reply("诶呀，作者还在写，接口还没接上捏");
+        //await this.reply(segment.image(e.img[0]));
+        await this.reply("以上是所有结果~如果上头没东西，可能是bot被风控了~~");
+    }
+    
+    async bf_class(e) {
+        await this.reply("正在查询兵种战绩……");
+        let playerid = e.msg.replace(/#|bf1|class(es)?| |bf5/g, "")
+        var version = ""
+        if(e.msg.indexOf("bf1")!=-1) version = "bf1"
+        if(e.msg.indexOf("bf5")!=-1) version = "bf5"
+        await this.reply(`${playerid}-${version}`);
+        const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
+            headers: { "Accept-Encoding": "gzip,deflate,compress" }
+        })
+        
+        var jsonobj = response.data;
+        //await this.reply((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``));
+        if (jsonobj==""|[]){
+            await this.reply("未收到返回数据")
+            return
+        }
+        if (jsonobj.error){
+            await this.reply("查无此人")
+            return
+        }
+        if (jsonobj.detail){
+            await this.reply("检验错误")
+            return
+        }
+        let message = []
+        await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
+        await message.push(`玩家名：${JSON.stringify(jsonobj.userName)}\n`)
+        for (var i=0;i<7;i++){
+            await message.push(segment.image((JSON.stringify(jsonobj.classes[i].image)).replaceAll(`\"`, ``)))
+            await message.push(`兵种：${JSON.stringify(jsonobj.classes[i].className)}\n兵种得分：${JSON.stringify(jsonobj.classes[i].score)}\n击杀数：${JSON.stringify(jsonobj.classes[i].kills)}\nKPM：${JSON.stringify(jsonobj.classes[i].kpm)}\n游玩时间：${JSON.stringify(jsonobj.classes[i].timePlayed)}\n`)
+        }
+        message.push(`\n您可使用#bf help获得更多功能命令`)
         
         let forwardMsg = await this.makeForwardMsg(`以下是您查询的${version}玩家${playerid}的武器战绩：`, message)
         await this.reply(forwardMsg)
@@ -221,6 +266,6 @@ export class example extends plugin {
     return forwardMsg
   }
   async bf_help(e){
-      await e.reply("回复图片“#搜图”或带图发送“#搜图”即可查询图片来源")
+      await e.reply("发送 #bf1/5 你的ID 查看基本战绩\n发送 #bf1/5weapon 你的ID 查看武器战绩\n发送 #bf1/5vehicles 你的ID 查看载具战绩\n发送 #bf1/5class 你的ID 查看兵种战绩")
   }
 }
