@@ -2,7 +2,11 @@
 田野打架1！5！战绩查询，支持查看所有武器载具详细信息 / 为Yunzai-Bot设计
 
 ## 使用方法
-调调要不要限制输出，限制的话限制多少就好。
+扔进/plugins后，再Yunzai-Bot根目录上运行安装axios：
+
+<code>cnpm install axios</code>
+
+调调要不要限制输出，限制的话再调调限制多少就好。
 
 输入#bf help查看更多指令
 
