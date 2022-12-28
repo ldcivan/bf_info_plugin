@@ -48,7 +48,7 @@ export class example extends plugin {
             ]
         })
     }
-
+    
 
     async bf_base(e) {
         await this.reply("正在查询综合战绩……");
@@ -57,23 +57,20 @@ export class example extends plugin {
         if(e.msg.indexOf("bf1")!=-1) version = "bf1"
         if(e.msg.indexOf("bf5")!=-1) version = "bf5"
         await this.reply(`${playerid}-${version}`);
+        try {
+            const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
+                headers: { "Accept-Encoding": "gzip,deflate,compress" }
+            })
+        } catch (e) {
+            await this.reply("404，可能是查无此人：\n"+e)
+            console.log("发生异常:" + e)
+            return
+        }
         const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
             headers: { "Accept-Encoding": "gzip,deflate,compress" }
         })
         var jsonobj = response.data;
         //await this.reply((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``));
-        if (jsonobj==""|[]){
-            await this.reply("未收到返回数据")
-            return
-        }
-        if (jsonobj.error){
-            await this.reply("查无此人")
-            return
-        }
-        if (jsonobj.detail){
-            await this.reply("检验错误")
-            return
-        }
         let message = []
         await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
         await message.push(`玩家名：${JSON.stringify(jsonobj.userName)}\n玩家等级：${JSON.stringify(jsonobj.rank)}\n技巧值：${JSON.stringify(jsonobj.skill)}\n每分钟得分：${JSON.stringify(jsonobj.scorePerMinute)}\n每分钟击杀：${JSON.stringify(jsonobj.killsPerMinute)}\n胜率：${JSON.stringify(jsonobj.winPercent)}\n最佳兵种：${JSON.stringify(jsonobj.bestClass)}\n准度：${JSON.stringify(jsonobj.accuracy)}\n爆头率：${JSON.stringify(jsonobj.headshots)}\n爆头数：${JSON.stringify(jsonobj.headShots)}\n最远爆头：${JSON.stringify(jsonobj.longestHeadShot)}\n已游玩时间：${JSON.stringify(jsonobj.timePlayed)}\nKD比：${JSON.stringify(jsonobj.killDeath)}\n击杀数：${JSON.stringify(jsonobj.kills)}\n死亡数：${JSON.stringify(jsonobj.deaths)}\n最高连续击杀：${JSON.stringify(jsonobj.highestKillStreak)}\n助攻数：${JSON.stringify(jsonobj.killAssists)}\n救起数：${JSON.stringify(jsonobj.revives)}\n治疗量：${JSON.stringify(jsonobj.heals)}\n维修量：${JSON.stringify(jsonobj.repairs)}\n`)
@@ -94,24 +91,21 @@ export class example extends plugin {
         if(e.msg.indexOf("bf1")!=-1) version = "bf1"
         if(e.msg.indexOf("bf5")!=-1) version = "bf5"
         await this.reply(`${playerid}-${version}`);
+        try {
+            const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
+                headers: { "Accept-Encoding": "gzip,deflate,compress" }
+            })
+        } catch (e) {
+            await this.reply("404，可能是查无此人：\n"+e)
+            console.log("发生异常:" + e)
+            return
+        }
         const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
             headers: { "Accept-Encoding": "gzip,deflate,compress" }
         })
         
         var jsonobj = response.data;
         //await this.reply((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``));
-        if (jsonobj==""|[]){
-            await this.reply("未收到返回数据")
-            return
-        }
-        if (jsonobj.error){
-            await this.reply("查无此人")
-            return
-        }
-        if (jsonobj.detail){
-            await this.reply("检验错误")
-            return
-        }
         function down(a, b) {
             return b.kills-a.kills
         }
@@ -143,24 +137,21 @@ export class example extends plugin {
         if(e.msg.indexOf("bf1")!=-1) version = "bf1"
         if(e.msg.indexOf("bf5")!=-1) version = "bf5"
         await this.reply(`${playerid}-${version}`);
+        try {
+            const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
+                headers: { "Accept-Encoding": "gzip,deflate,compress" }
+            })
+        } catch (e) {
+            await this.reply("404，可能是查无此人：\n"+e)
+            console.log("发生异常:" + e)
+            return
+        }
         const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
             headers: { "Accept-Encoding": "gzip,deflate,compress" }
         })
         
         var jsonobj = response.data;
         //await this.reply((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``));
-        if (jsonobj==""|[]){
-            await this.reply("未收到返回数据")
-            return
-        }
-        if (jsonobj.error){
-            await this.reply("查无此人")
-            return
-        }
-        if (jsonobj.detail){
-            await this.reply("检验错误")
-            return
-        }
         function down(a, b) {
             return b.kills-a.kills
         }
@@ -175,7 +166,7 @@ export class example extends plugin {
             await message.push(segment.image((JSON.stringify(jsonobj.weapons[i].image)).replaceAll(`\"`, ``)))
             await message.push(`武器名：${JSON.stringify(jsonobj.weapons[i].weaponName)}\n武器种类：${JSON.stringify(jsonobj.weapons[i].type)}\n击杀数：${JSON.stringify(jsonobj.weapons[i].kills)}\nKPM：${JSON.stringify(jsonobj.weapons[i].killsPerMinute)}\n准度：${JSON.stringify(jsonobj.weapons[i].accuracy)}\n爆头率：${JSON.stringify(jsonobj.weapons[i].headshots)}\n命中/击杀比：${JSON.stringify(jsonobj.weapons[i].hitVKills)}\n`)
         }
-        message.push(`您可使用#${version} carrier 获取载具数据`)
+        message.push(`\n您可使用#bf help获得更多功能命令`)
         
         let forwardMsg = await this.makeForwardMsg(`以下是您查询的${version}玩家${playerid}的武器战绩：`, message)
         await this.reply(forwardMsg)
@@ -192,24 +183,21 @@ export class example extends plugin {
         if(e.msg.indexOf("bf1")!=-1) version = "bf1"
         if(e.msg.indexOf("bf5")!=-1) version = "bf5"
         await this.reply(`${playerid}-${version}`);
+        try {
+            const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
+                headers: { "Accept-Encoding": "gzip,deflate,compress" }
+            })
+        } catch (e) {
+            await this.reply("404，可能是查无此人：\n"+e)
+            console.log("发生异常:" + e)
+            return
+        }
         const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
             headers: { "Accept-Encoding": "gzip,deflate,compress" }
         })
         
         var jsonobj = response.data;
         //await this.reply((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``));
-        if (jsonobj==""|[]){
-            await this.reply("未收到返回数据")
-            return
-        }
-        if (jsonobj.error){
-            await this.reply("查无此人")
-            return
-        }
-        if (jsonobj.detail){
-            await this.reply("检验错误")
-            return
-        }
         let message = []
         await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
         await message.push(`玩家名：${JSON.stringify(jsonobj.userName)}\n`)
@@ -265,6 +253,7 @@ export class example extends plugin {
 
     return forwardMsg
   }
+  
   async bf_help(e){
       await e.reply("发送 #bf1/5 你的ID 查看基本战绩\n发送 #bf1/5weapon 你的ID 查看武器战绩\n发送 #bf1/5vehicles 你的ID 查看载具战绩\n发送 #bf1/5class 你的ID 查看兵种战绩")
   }
