@@ -74,6 +74,12 @@ export class example extends plugin {
         let message = []
         await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
         await message.push(`玩家名：${JSON.stringify(jsonobj.userName)}\n玩家等级：${JSON.stringify(jsonobj.rank)}\n技巧值：${JSON.stringify(jsonobj.skill)}\n每分钟得分：${JSON.stringify(jsonobj.scorePerMinute)}\n每分钟击杀：${JSON.stringify(jsonobj.killsPerMinute)}\n胜率：${JSON.stringify(jsonobj.winPercent)}\n最佳兵种：${JSON.stringify(jsonobj.bestClass)}\n准度：${JSON.stringify(jsonobj.accuracy)}\n爆头率：${JSON.stringify(jsonobj.headshots)}\n爆头数：${JSON.stringify(jsonobj.headShots)}\n最远爆头：${JSON.stringify(jsonobj.longestHeadShot)}\n已游玩时间：${JSON.stringify(jsonobj.timePlayed)}\nKD比：${JSON.stringify(jsonobj.killDeath)}\n击杀数：${JSON.stringify(jsonobj.kills)}\n死亡数：${JSON.stringify(jsonobj.deaths)}\n最高连续击杀：${JSON.stringify(jsonobj.highestKillStreak)}\n助攻数：${JSON.stringify(jsonobj.killAssists)}\n救起数：${JSON.stringify(jsonobj.revives)}\n治疗量：${JSON.stringify(jsonobj.heals)}\n维修量：${JSON.stringify(jsonobj.repairs)}\n`)
+        const response2 = await axios.get(`https://api.gametools.network/bfban/checkban?names=${playerid}&lang=zh-tw`,{
+            headers: { "Accept-Encoding": "gzip,deflate,compress" }
+        })
+        var jsonobj2 = response2.data;
+        for(var key in jsonobj2.names)
+            message.push(`是否被联ban：${JSON.stringify(jsonobj2.names[key].hacker)}`)
         message.push(`\n您可使用#bf help获得更多功能命令`)
         
         let forwardMsg = await this.makeForwardMsg(`以下是您查询的${version}玩家${playerid}的综合战绩：`, message)
