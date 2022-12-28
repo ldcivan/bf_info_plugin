@@ -6,6 +6,8 @@
 
 <code>cnpm install axios</code>或者<code>npm install axios</code>
 
+再不行试试<code>pnpm add axios -w</code>
+
 调调要不要限制输出，限制的话再调调限制多少就好。
 
 输入#bf help查看更多指令
