@@ -14,7 +14,7 @@ const require = createRequire(import.meta.url);
 const axios = require('axios');
 
 var limit = 1 //是否限制武器载具信息输出个数
-var output_amount = 5 //武器载具信息最多输出几个  我个人建议限制在5-10个，不然输出太慢了
+var output_amount = 8 //武器载具信息最多输出几个  我个人建议限制在5-10个，不然输出太慢了
 if (limit==1)
     var numres = output_amount
     
@@ -26,11 +26,11 @@ export class example extends plugin {
             priority: 5000,
             rule: [
                 {
-                    reg: '^#?bf(1|5)(carriers?|vehicles?).*$',
+                    reg: '^#?bf(1|5)(carriers?|vehicles?)(\d?\d?条)?.*$',
                     fnc: 'bf_carrier'
                 },
                 {
-                    reg: '^#?bf(1|5)(weapons?).*$',
+                    reg: '^#?bf(1|5)(weapons?)(\d?\d?条)?.*$',
                     fnc: 'bf_weapon'
                 },
                 {
@@ -91,12 +91,30 @@ export class example extends plugin {
     }
     
     async bf_carrier(e) {
-        await this.reply("正在查询载具战绩……");
-        let playerid = e.msg.replace(/#|bf1|carriers?|vehicles?| |bf5/g, "")
+        //this.reply(e.msg.match(/\d?\d?条/g)[0])
+        if(e.msg.match(/\d?\d?条/g)){
+            var number_str = e.msg.match(/\d?\d?条/i)[0]
+            var number = parseInt(number_str.replace("/条/g",""))
+            if(limit==1){
+                numres = number
+            }
+            else{
+                var numres = number
+            }
+            await this.reply(`正在查询载具战绩,需要${numres}条……`);
+        }
+        else{
+            if(limit==1){
+                numres = output_amount
+                await this.reply(`正在查询载具战绩,需要${numres}条……`);}
+            else
+                await this.reply(`正在查询载具战绩,需要全部……`);
+        }
+        let playerid = e.msg.replace(/#|bf1|carriers?|vehicles?| |\d?\d?条|bf5/g, "")
         var version = ""
         if(e.msg.indexOf("bf1")!=-1) version = "bf1"
         if(e.msg.indexOf("bf5")!=-1) version = "bf5"
-        await this.reply(`${playerid}-${version}`);
+        await this.reply(`${playerid}-${version}-${numres}条`);
         try {
             const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
                 headers: { "Accept-Encoding": "gzip,deflate,compress" }
@@ -111,22 +129,26 @@ export class example extends plugin {
         })
         
         var jsonobj = response.data;
-        //await this.reply((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``));
+        //await this.reply("返回："+JSON.stringify(jsonobj));
         function down(a, b) {
             return b.kills-a.kills
         }
         jsonobj.vehicles.sort(down) //按击杀排序
         let message = []
-        await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
-        await message.push(`玩家名：${JSON.stringify(jsonobj.userName)}\n`)
-        if(limit==0){
-            numres=Object.keys(jsonobj.vehicles).length
+        if(limit==0&&!numres){
+            var numres=Object.keys(jsonobj.vehicles).length
         }
-        for (var i=0;i<numres||Object.keys(jsonobj.vehicles).length;i++){
+        if(numres > Object.keys(jsonobj.vehicles).length){
+            await this.reply(`需要条数越界，已更正为最大值`)
+            numres = Object.keys(jsonobj.vehicles).length
+        }
+        await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
+        await message.push(`玩家名：${JSON.stringify(jsonobj.userName)}\n共${Object.keys(jsonobj.vehicles).length}条信息，显示了${numres}条\n`)
+        for (var i=0;i<numres;i++){
             await message.push(segment.image((JSON.stringify(jsonobj.vehicles[i].image)).replaceAll(`\"`, ``)))
             await message.push(`载具名：${JSON.stringify(jsonobj.vehicles[i].vehicleName)}\n载具种类：${JSON.stringify(jsonobj.vehicles[i].type)}\n击杀数：${JSON.stringify(jsonobj.vehicles[i].kills)}\nKPM：${JSON.stringify(jsonobj.vehicles[i].killsPerMinute)}\n摧毁载具：${JSON.stringify(jsonobj.vehicles[i].destroyed)}\n乘坐时间：${JSON.stringify(jsonobj.vehicles[i].timeIn)}\n`)
         }
-        message.push(`\n您可使用#bf help获得更多功能命令`)
+        message.push(`\n您还可以使用“#${version}carrier10条 您的ID”来自定义输出条数\n您可使用#bf help获得更多功能命令`)
         
         let forwardMsg = await this.makeForwardMsg(`以下是您查询的${version}玩家${playerid}的载具战绩：`, message)
         await this.reply(forwardMsg)
@@ -137,12 +159,29 @@ export class example extends plugin {
     }
     
     async bf_weapon(e) {
-        await this.reply("正在查询武器战绩……");
-        let playerid = e.msg.replace(/#|bf1|weapons?| |bf5/g, "")
+        if(e.msg.match(/\d?\d?条/g)){
+            var number_str = e.msg.match(/\d?\d?条/i)[0]
+            var number = parseInt(number_str.replace("/条/g",""))
+            if(limit==1){
+                numres = number
+            }
+            else{
+                var numres = number
+            }
+            await this.reply(`正在查询武器战绩,需要${numres}条……`);
+        }
+        else{
+            if(limit==1){
+                numres = output_amount
+                await this.reply(`正在查询武器战绩,需要${numres}条……`);}
+            else
+                await this.reply(`正在查询武器战绩,需要全部……`);
+        }
+        let playerid = e.msg.replace(/#|bf1|weapons?| |\d?\d?条|bf5/g, "")
         var version = ""
         if(e.msg.indexOf("bf1")!=-1) version = "bf1"
         if(e.msg.indexOf("bf5")!=-1) version = "bf5"
-        await this.reply(`${playerid}-${version}`);
+        await this.reply(`${playerid}-${version}-${numres}条`);
         try {
             const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
                 headers: { "Accept-Encoding": "gzip,deflate,compress" }
@@ -163,16 +202,20 @@ export class example extends plugin {
         }
         jsonobj.weapons.sort(down) //按击杀排序
         let message = []
-        await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
-        await message.push(`玩家名：${JSON.stringify(jsonobj.userName)}\n`)
-        if(limit==0){
-            numres=Object.keys(jsonobj.weapons).length
+        if(limit==0&&!numres){
+            var numres=Object.keys(jsonobj.weapon).length
         }
+        if(numres>Object.keys(jsonobj.weapon).length){
+            await this.reply(`需要条数越界，已更正为最大值`)
+            numres = Object.keys(jsonobj.weapon).length
+        }
+        await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
+        await message.push(`玩家名：${JSON.stringify(jsonobj.userName)}\n共${Object.keys(jsonobj.weapons).length}条信息，显示了${numres}条\n`)
         for (var i=0;i<numres;i++){
             await message.push(segment.image((JSON.stringify(jsonobj.weapons[i].image)).replaceAll(`\"`, ``)))
             await message.push(`武器名：${JSON.stringify(jsonobj.weapons[i].weaponName)}\n武器种类：${JSON.stringify(jsonobj.weapons[i].type)}\n击杀数：${JSON.stringify(jsonobj.weapons[i].kills)}\nKPM：${JSON.stringify(jsonobj.weapons[i].killsPerMinute)}\n准度：${JSON.stringify(jsonobj.weapons[i].accuracy)}\n爆头率：${JSON.stringify(jsonobj.weapons[i].headshots)}\n命中/击杀比：${JSON.stringify(jsonobj.weapons[i].hitVKills)}\n`)
         }
-        message.push(`\n您可使用#bf help获得更多功能命令`)
+        message.push(`\n您还可以使用“#${version}weapon10条 您的ID”来自定义输出条数\n您可使用#bf help获得更多功能命令`)
         
         let forwardMsg = await this.makeForwardMsg(`以下是您查询的${version}玩家${playerid}的武器战绩：`, message)
         await this.reply(forwardMsg)
@@ -213,7 +256,7 @@ export class example extends plugin {
         }
         message.push(`\n您可使用#bf help获得更多功能命令`)
         
-        let forwardMsg = await this.makeForwardMsg(`以下是您查询的${version}玩家${playerid}的武器战绩：`, message)
+        let forwardMsg = await this.makeForwardMsg(`以下是您查询的${version}玩家${playerid}的兵种战绩：`, message)
         await this.reply(forwardMsg)
         //await this.reply(JSON.stringify(jsonobj.results));
         //await this.reply("诶呀，作者还在写，接口还没接上捏");
