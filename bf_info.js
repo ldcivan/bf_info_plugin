@@ -304,6 +304,6 @@ export class example extends plugin {
   }
   
   async bf_help(e){
-      await e.reply("发送 #bf1/5 你的ID 查看基本战绩\n发送 #bf1/5weapon 你的ID 查看武器战绩\n发送 #bf1/5vehicles 你的ID 查看载具战绩\n发送 #bf1/5class 你的ID 查看兵种战绩")
+      await e.reply("发送 #bf1/v 你的ID 查看基本战绩\n发送 #bf1/vweapon 你的ID 查看武器战绩\n发送 #bf1/vvehicles 你的ID 查看载具战绩\n发送 #bf1/vclass 你的ID 查看兵种战绩")
   }
 }
