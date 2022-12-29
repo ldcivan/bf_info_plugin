@@ -130,8 +130,6 @@ export class example extends plugin {
         
         var jsonobj = response.data;
         //await this.reply("返回："+JSON.stringify(jsonobj));
-        if (jsonobj.weapons == [])
-            return this.reply("无载具数据！")
         function down(a, b) {
             return b.kills-a.kills
         }
@@ -199,8 +197,6 @@ export class example extends plugin {
         
         var jsonobj = response.data;
         //await this.reply((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``));
-        if (jsonobj.weapons == [])
-            return this.reply("无武器数据！")
         function down(a, b) {
             return b.kills-a.kills
         }
