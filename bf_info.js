@@ -26,19 +26,19 @@ export class example extends plugin {
             priority: 5000,
             rule: [
                 {
-                    reg: '^#?bf(1|5)(carriers?|vehicles?)(\d?\d?条)?.*$',
+                    reg: '^#?bf(1|v)(carriers?|vehicles?)(\d?\d?条)?.*$',
                     fnc: 'bf_carrier'
                 },
                 {
-                    reg: '^#?bf(1|5)(weapons?)(\d?\d?条)?.*$',
+                    reg: '^#?bf(1|v)(weapons?)(\d?\d?条)?.*$',
                     fnc: 'bf_weapon'
                 },
                 {
-                    reg: '^#?bf(1|5)(class(es)?).*$',
+                    reg: '^#?bf(1|v)(class(es)?).*$',
                     fnc: 'bf_class'
                 },
                 {
-                    reg: '^#?bf(1|5).*$',
+                    reg: '^#?bf(1|v).*$',
                     fnc: 'bf_base'
                 },
                 {
