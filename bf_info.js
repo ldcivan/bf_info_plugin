@@ -52,10 +52,10 @@ export class example extends plugin {
 
     async bf_base(e) {
         await this.reply("正在查询综合战绩……");
-        let playerid = e.msg.replace(/#|bf1| |bf5/g, "")
+        let playerid = e.msg.replace(/#|bf1| |bfv/g, "")
         var version = ""
         if(e.msg.indexOf("bf1")!=-1) version = "bf1"
-        if(e.msg.indexOf("bf5")!=-1) version = "bf5"
+        if(e.msg.indexOf("bfv")!=-1) version = "bfv"
         await this.reply(`${playerid}-${version}`);
         try {
             const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
@@ -110,10 +110,10 @@ export class example extends plugin {
             else
                 await this.reply(`正在查询载具战绩,需要全部……`);
         }
-        let playerid = e.msg.replace(/#|bf1|carriers?|vehicles?| |\d?\d?条|bf5/g, "")
+        let playerid = e.msg.replace(/#|bf1|carriers?|vehicles?| |\d?\d?条|bfv/g, "")
         var version = ""
         if(e.msg.indexOf("bf1")!=-1) version = "bf1"
-        if(e.msg.indexOf("bf5")!=-1) version = "bf5"
+        if(e.msg.indexOf("bfv")!=-1) version = "bfv"
         await this.reply(`${playerid}-${version}-${numres}条`);
         try {
             const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
@@ -177,10 +177,10 @@ export class example extends plugin {
             else
                 await this.reply(`正在查询武器战绩,需要全部……`);
         }
-        let playerid = e.msg.replace(/#|bf1|weapons?| |\d?\d?条|bf5/g, "")
+        let playerid = e.msg.replace(/#|bf1|weapons?| |\d?\d?条|bfv/g, "")
         var version = ""
         if(e.msg.indexOf("bf1")!=-1) version = "bf1"
-        if(e.msg.indexOf("bf5")!=-1) version = "bf5"
+        if(e.msg.indexOf("bfv")!=-1) version = "bfv"
         await this.reply(`${playerid}-${version}-${numres}条`);
         try {
             const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
@@ -227,10 +227,10 @@ export class example extends plugin {
     
     async bf_class(e) {
         await this.reply("正在查询兵种战绩……");
-        let playerid = e.msg.replace(/#|bf1|class(es)?| |bf5/g, "")
+        let playerid = e.msg.replace(/#|bf1|class(es)?| |bfv/g, "")
         var version = ""
         if(e.msg.indexOf("bf1")!=-1) version = "bf1"
-        if(e.msg.indexOf("bf5")!=-1) version = "bf5"
+        if(e.msg.indexOf("bfv")!=-1) version = "bfv"
         await this.reply(`${playerid}-${version}`);
         try {
             const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
