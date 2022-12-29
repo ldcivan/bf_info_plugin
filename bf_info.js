@@ -205,9 +205,9 @@ export class example extends plugin {
         if(limit==0&&!numres){
             var numres=Object.keys(jsonobj.weapon).length
         }
-        if(numres>Object.keys(jsonobj.weapon).length){
+        if(numres>Object.keys(jsonobj.weapons).length){
             await this.reply(`需要条数越界，已更正为最大值`)
-            numres = Object.keys(jsonobj.weapon).length
+            numres = Object.keys(jsonobj.weapons).length
         }
         await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
         await message.push(`玩家名：${JSON.stringify(jsonobj.userName)}\n共${Object.keys(jsonobj.weapons).length}条信息，显示了${numres}条\n`)
