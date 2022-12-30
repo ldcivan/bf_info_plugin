@@ -12,6 +12,8 @@
 
 发送 #bf1/5 你的ID 查看基本战绩\n发送 #bf1/5weapon 你的ID 查看武器战绩；发送 #bf1/5vehicles 你的ID 查看载具战绩\n发送 #bf1/5class 你的ID 查看兵种战绩；在载具/武器信息指令和Id间加“x条”（如：#bf1weapon5条 Yujio_Nako）可控制返回信息数量
 
+现在可以用#bf绑定id 来绑定你的战地ID了，绑定后您可以用 me 代替您的id
+
 输入#bf help查看帮助
 
 我建议限制一下，要不然半天反不回来结果
