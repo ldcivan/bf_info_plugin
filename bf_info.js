@@ -7,11 +7,23 @@ https://github.com/ldcivan/bf_info_plugin
 */
 
 import plugin from '../../lib/plugins/plugin.js'
+import fs from 'fs'
 import { segment } from "oicq";
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 
 const axios = require('axios');
+
+const dirpath = "plugins/example/bf_info"
+var filename = `bf_info.json`
+if (!fs.existsSync(dirpath)) {//如果文件夹不存在
+	fs.mkdirSync(dirpath);//创建文件夹
+}
+//如果文件不存在，创建文件
+if (!fs.existsSync(dirpath + "/" + filename)) {
+    fs.writeFileSync(dirpath + "/" + filename, JSON.stringify({
+    }))
+}
 
 var limit = 1 //是否限制武器载具信息输出个数
 var output_amount = 8 //武器载具信息最多输出几个  我个人建议限制在5-10个，不然输出太慢了
@@ -44,6 +56,10 @@ export class example extends plugin {
                 {
                   reg: "^#?bf( help)?$",
                   fnc: 'bf_help'
+                },
+                {
+                  reg: "^#?bf绑定i?d?.*$",
+                  fnc: 'bf_creat'
                 }
             ]
         })
@@ -56,6 +72,17 @@ export class example extends plugin {
         var version = ""
         if(e.msg.indexOf("bf1")!=-1) version = "bf1"
         if(e.msg.indexOf("bfv")!=-1) version = "bfv"
+        if (/(M|m)(E|e)/g.test(playerid)) {
+            var id = e.user_id
+            var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
+            if(json.hasOwnProperty(id)) {//如果json中存在该用户
+                await this.reply("使用已记录的绑定的id")
+                playerid = JSON.stringify(json[id].bf_id).replace(/\"/g, "")
+            }
+            else{
+                await this.reply("你在未绑定id的情况下使用了me\n请先用 #bf绑定id 来让bot记住你的战地id")
+            }
+        }
         await this.reply(`${playerid}-${version}`);
         try {
             const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
@@ -114,6 +141,17 @@ export class example extends plugin {
         var version = ""
         if(e.msg.indexOf("bf1")!=-1) version = "bf1"
         if(e.msg.indexOf("bfv")!=-1) version = "bfv"
+        if (/(M|m)(E|e)/g.test(playerid)) {
+            var id = e.user_id
+            var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
+            if(json.hasOwnProperty(id)) {//如果json中存在该用户
+                await this.reply("使用已记录的绑定的id")
+                playerid = JSON.stringify(json[id].bf_id).replace(/\"/g, "")
+            }
+            else{
+                await this.reply("你在未绑定id的情况下使用了me\n请先用 #bf绑定id 来让bot记住你的战地id")
+            }
+        }
         await this.reply(`${playerid}-${version}-${numres}条`);
         try {
             const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
@@ -181,6 +219,17 @@ export class example extends plugin {
         var version = ""
         if(e.msg.indexOf("bf1")!=-1) version = "bf1"
         if(e.msg.indexOf("bfv")!=-1) version = "bfv"
+        if (/(M|m)(E|e)/g.test(playerid)) {
+            var id = e.user_id
+            var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
+            if(json.hasOwnProperty(id)) {//如果json中存在该用户
+                await this.reply("使用已记录的绑定的id")
+                playerid = JSON.stringify(json[id].bf_id).replace(/\"/g, "")
+            }
+            else{
+                await this.reply("你在未绑定id的情况下使用了me\n请先用 #bf绑定id 来让bot记住你的战地id")
+            }
+        }
         await this.reply(`${playerid}-${version}-${numres}条`);
         try {
             const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
@@ -231,6 +280,17 @@ export class example extends plugin {
         var version = ""
         if(e.msg.indexOf("bf1")!=-1) version = "bf1"
         if(e.msg.indexOf("bfv")!=-1) version = "bfv"
+        if (/(M|m)(E|e)/g.test(playerid)) {
+            var id = e.user_id
+            var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
+            if(json.hasOwnProperty(id)) {//如果json中存在该用户
+                await this.reply("使用已记录的绑定的id")
+                playerid = JSON.stringify(json[id].bf_id).replace(/\"/g, "")
+            }
+            else{
+                await this.reply("你在未绑定id的情况下使用了me\n请先用 #bf绑定id 来让bot记住你的战地id")
+            }
+        }
         await this.reply(`${playerid}-${version}`);
         try {
             const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
@@ -303,7 +363,26 @@ export class example extends plugin {
     return forwardMsg
   }
   
+  async bf_creat(e){
+    var bf_id = e.msg.replace(/#| |bf绑定i?d?/g, "")
+    var data = {
+    "bf_id": bf_id,
+    }
+    var id = e.user_id
+    var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
+    if(!json.hasOwnProperty(id)) {//如果json中不存在该用户
+        json[id] = data
+        fs.writeFileSync(dirpath + "/" + filename, JSON.stringify(json, null, "\t"));//写入文件
+        await this.reply("已记录您的ID，您可再次使用命令覆盖老的记录")
+    }
+    else{
+        json[id] = data
+        fs.writeFileSync(dirpath + "/" + filename, JSON.stringify(json, null, "\t"));//写入文件
+        await this.reply("已覆盖您的ID，您可再次使用命令覆盖老的记录")
+    }
+  }
+  
   async bf_help(e){
-      await e.reply("发送 #bf1/v 你的ID 查看基本战绩\n发送 #bf1/vweapon 你的ID 查看武器战绩\n发送 #bf1/vvehicles 你的ID 查看载具战绩\n发送 #bf1/vclass 你的ID 查看兵种战绩")
+      await e.reply("发送 #bf绑定id 你的ID 将您的QQ与战地ID绑定\n发送 #bf1/v 你的ID 查看基本战绩\n发送 #bf1/vweapon 你的ID 查看武器战绩\n发送 #bf1/vvehicles 你的ID 查看载具战绩\n发送 #bf1/vclass 你的ID 查看兵种战绩\n将 你的ID 替换成 me 可使用绑定的ID进行查询")
   }
 }
