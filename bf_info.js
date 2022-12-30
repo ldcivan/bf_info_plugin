@@ -10,6 +10,7 @@ import plugin from '../../lib/plugins/plugin.js'
 import fs from 'fs'
 import { segment } from "oicq";
 import { createRequire } from "module";
+import cfg from '../../lib/config/config.js'
 const require = createRequire(import.meta.url);
 
 const axios = require('axios');
@@ -38,27 +39,27 @@ export class example extends plugin {
             priority: 5000,
             rule: [
                 {
-                    reg: '^#?bf(1|v)(carriers?|vehicles?)(\d?\d?条)?.*$',
+                    reg: '^#?(B|b)(F|f)(1|v)(carriers?|vehicles?)(\d?\d?条)?.*$',
                     fnc: 'bf_carrier'
                 },
                 {
-                    reg: '^#?bf(1|v)(weapons?)(\d?\d?条)?.*$',
+                    reg: '^#?(B|b)(F|f)(1|v)(weapons?)(\d?\d?条)?.*$',
                     fnc: 'bf_weapon'
                 },
                 {
-                    reg: '^#?bf(1|v)(class(es)?).*$',
+                    reg: '^#?(B|b)(F|f)(1|v)(class(es)?).*$',
                     fnc: 'bf_class'
                 },
                 {
-                    reg: '^#?bf(1|v).*$',
+                    reg: '^#?(B|b)(F|f)(1|v).*$',
                     fnc: 'bf_base'
                 },
                 {
-                  reg: "^#?bf( help)?$",
+                  reg: "^#?(B|b)(F|f)( help)?$",
                   fnc: 'bf_help'
                 },
                 {
-                  reg: "^#?bf绑定i?d?.*$",
+                  reg: "^#?(B|b)(F|f)绑定(I|i)?(D|d)?.*$",
                   fnc: 'bf_creat'
                 }
             ]
@@ -68,10 +69,10 @@ export class example extends plugin {
 
     async bf_base(e) {
         await this.reply("正在查询综合战绩……");
-        let playerid = e.msg.replace(/#|bf1| |bfv/g, "")
+        let playerid = e.msg.replace(/#|(B|b)(F|f)(1|v)| /g, "")
         var version = ""
-        if(e.msg.indexOf("bf1")!=-1) version = "bf1"
-        if(e.msg.indexOf("bfv")!=-1) version = "bfv"
+        if(e.msg.search(/(B|b)(F|f)1/g)!=-1) version = "bf1"
+        if(e.msg.search(/(B|b)(F|f)v/g)!=-1) version = "bfv"
         if (/(M|m)(E|e)/g.test(playerid)) {
             var id = e.user_id
             var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
@@ -137,10 +138,10 @@ export class example extends plugin {
             else
                 await this.reply(`正在查询载具战绩,需要全部……`);
         }
-        let playerid = e.msg.replace(/#|bf1|carriers?|vehicles?| |\d?\d?条|bfv/g, "")
+        let playerid = e.msg.replace(/#|(B|b)(F|f)(1|v)|carriers?|vehicles?| |\d?\d?条/g, "")
         var version = ""
-        if(e.msg.indexOf("bf1")!=-1) version = "bf1"
-        if(e.msg.indexOf("bfv")!=-1) version = "bfv"
+        if(e.msg.search(/(B|b)(F|f)1/g)!=-1) version = "bf1"
+        if(e.msg.search(/(B|b)(F|f)v/g)!=-1) version = "bfv"
         if (/(M|m)(E|e)/g.test(playerid)) {
             var id = e.user_id
             var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
@@ -215,10 +216,10 @@ export class example extends plugin {
             else
                 await this.reply(`正在查询武器战绩,需要全部……`);
         }
-        let playerid = e.msg.replace(/#|bf1|weapons?| |\d?\d?条|bfv/g, "")
+        let playerid = e.msg.replace(/#|(B|b)(F|f)(1|v)|weapons?| |\d?\d?条/g, "")
         var version = ""
-        if(e.msg.indexOf("bf1")!=-1) version = "bf1"
-        if(e.msg.indexOf("bfv")!=-1) version = "bfv"
+        if(e.msg.search(/(B|b)(F|f)1/g)!=-1) version = "bf1"
+        if(e.msg.search(/(B|b)(F|f)v/g)!=-1) version = "bfv"
         if (/(M|m)(E|e)/g.test(playerid)) {
             var id = e.user_id
             var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
@@ -276,10 +277,10 @@ export class example extends plugin {
     
     async bf_class(e) {
         await this.reply("正在查询兵种战绩……");
-        let playerid = e.msg.replace(/#|bf1|class(es)?| |bfv/g, "")
+        let playerid = e.msg.replace(/#|(B|b)(F|f)(1|v)| |class(es)?|/g, "")
         var version = ""
-        if(e.msg.indexOf("bf1")!=-1) version = "bf1"
-        if(e.msg.indexOf("bfv")!=-1) version = "bfv"
+        if(e.msg.search(/(B|b)(F|f)1/g)!=-1) version = "bf1"
+        if(e.msg.search(/(B|b)(F|f)v/g)!=-1) version = "bfv"
         if (/(M|m)(E|e)/g.test(playerid)) {
             var id = e.user_id
             var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
@@ -364,7 +365,7 @@ export class example extends plugin {
   }
   
   async bf_creat(e){
-    var bf_id = e.msg.replace(/#| |bf绑定i?d?/g, "")
+    var bf_id = e.msg.replace(/#| |(B|b)(F|f)绑定(I|i)?(D|d)?/g, "")
     var data = {
     "bf_id": bf_id,
     }
