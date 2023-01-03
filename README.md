@@ -2,11 +2,19 @@
 田野打架1！5！战绩查询，支持查看所有武器载具详细信息 / 为Yunzai-Bot设计
 
 ## 使用方法
+<del>
 扔进/plugins后，再Yunzai-Bot根目录上运行安装axios（具体用哪个看你当初怎么装的Yunzai依赖）：
+</del>
 
+<del>
 <code>cnpm install axios</code>或者<code>npm install axios</code>
+</del>
 
+<del>
 再不行试试<code>pnpm add axios -w</code>
+</del>
+
+不用axios了，直接扔进plugin/example就好
 
 之后在js里调调要不要限制输出，限制的话再调调限制多少就好。
 
