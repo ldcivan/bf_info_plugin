@@ -11,9 +11,9 @@ import fs from 'fs'
 import { segment } from "oicq";
 import { createRequire } from "module";
 import cfg from '../../lib/config/config.js'
-const require = createRequire(import.meta.url);
+//const require = createRequire(import.meta.url);
 
-const axios = require('axios');
+//const axios = require('axios');
 
 const dirpath = "plugins/example/bf_info"
 var filename = `bf_info.json`
@@ -85,19 +85,22 @@ export class example extends plugin {
             }
         }
         await this.reply(`${playerid}-${version}`);
-        try {
-            const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
-                headers: { "Accept-Encoding": "gzip,deflate,compress" }
-            })
-        } catch (e) {
-            await this.reply("404，可能是查无此人：\n"+e)
-            console.log("发生异常:" + e)
+        var url = `https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`
+        //try {
+            //const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
+        //} catch (e) {
+       //     await this.reply("404，可能是查无此人：\n"+e)
+        //    console.log("发生异常:" + e)
+        //    return
+        //}
+        //const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
+        //var jsonobj = response.data;
+        const response = await fetch(url, { "method": "GET" });
+        var jsonobj = await response.json();
+        if (jsonobj.errors){
+            this.reply(`错误发生：${JSON.stringify(jsonobj.errors)}`)
             return
         }
-        const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
-            headers: { "Accept-Encoding": "gzip,deflate,compress" }
-        })
-        var jsonobj = response.data;
         //await this.reply((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``));
         let message = []
         await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
@@ -154,21 +157,23 @@ export class example extends plugin {
             }
         }
         await this.reply(`${playerid}-${version}-${numres}条`);
-        try {
-            const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
-                headers: { "Accept-Encoding": "gzip,deflate,compress" }
-            })
-        } catch (e) {
-            await this.reply("404，可能是查无此人：\n"+e)
-            console.log("发生异常:" + e)
+        var url = `https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`
+        //try {
+            //const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
+        //} catch (e) {
+       //     await this.reply("404，可能是查无此人：\n"+e)
+        //    console.log("发生异常:" + e)
+        //    return
+        //}
+        //const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
+        //var jsonobj = response.data;
+        const response = await fetch(url, { "method": "GET" });
+        var jsonobj = await response.json();
+        if (jsonobj.errors){
+            this.reply(`错误发生：${JSON.stringify(jsonobj.errors)}`)
             return
         }
-        const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
-            headers: { "Accept-Encoding": "gzip,deflate,compress" }
-        })
-        
-        var jsonobj = response.data;
-        //await this.reply("返回："+JSON.stringify(jsonobj));
+        //await this.reply((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``));
         function down(a, b) {
             return b.kills-a.kills
         }
@@ -232,20 +237,22 @@ export class example extends plugin {
             }
         }
         await this.reply(`${playerid}-${version}-${numres}条`);
-        try {
-            const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
-                headers: { "Accept-Encoding": "gzip,deflate,compress" }
-            })
-        } catch (e) {
-            await this.reply("404，可能是查无此人：\n"+e)
-            console.log("发生异常:" + e)
+        var url = `https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`
+        //try {
+            //const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
+        //} catch (e) {
+       //     await this.reply("404，可能是查无此人：\n"+e)
+        //    console.log("发生异常:" + e)
+        //    return
+        //}
+        //const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
+        //var jsonobj = response.data;
+        const response = await fetch(url, { "method": "GET" });
+        var jsonobj = await response.json();
+        if (jsonobj.errors){
+            this.reply(`错误发生：${JSON.stringify(jsonobj.errors)}`)
             return
         }
-        const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
-            headers: { "Accept-Encoding": "gzip,deflate,compress" }
-        })
-        
-        var jsonobj = response.data;
         //await this.reply((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``));
         function down(a, b) {
             return b.kills-a.kills
@@ -293,20 +300,22 @@ export class example extends plugin {
             }
         }
         await this.reply(`${playerid}-${version}`);
-        try {
-            const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
-                headers: { "Accept-Encoding": "gzip,deflate,compress" }
-            })
-        } catch (e) {
-            await this.reply("404，可能是查无此人：\n"+e)
-            console.log("发生异常:" + e)
+        var url = `https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`
+        //try {
+            //const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
+        //} catch (e) {
+       //     await this.reply("404，可能是查无此人：\n"+e)
+        //    console.log("发生异常:" + e)
+        //    return
+        //}
+        //const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
+        //var jsonobj = response.data;
+        const response = await fetch(url, { "method": "GET" });
+        var jsonobj = await response.json();
+        if (jsonobj.errors){
+            this.reply(`错误发生：${JSON.stringify(jsonobj.errors)}`)
             return
         }
-        const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{
-            headers: { "Accept-Encoding": "gzip,deflate,compress" }
-        })
-        
-        var jsonobj = response.data;
         //await this.reply((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``));
         let message = []
         await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
