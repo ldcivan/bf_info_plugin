@@ -29,6 +29,8 @@
 <del>这玩意儿对错误的ID不敏感，你给他个查无此人的id他也不会报错，只会在后台报404，所以你得自己注意输入</del>
 
 应该没事了，起码网页请求出错会反状态码了，404大概率是因为查无此人，403大概率是你IP被api限制了
+
+针对报错fetch is not defined，可以参考这个>>>https://github.com/ldcivan/Yunzai_imgSearcher/issues/3
 ## 其他
 感谢：
 
