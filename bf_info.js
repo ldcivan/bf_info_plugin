@@ -11,6 +11,7 @@ import fs from 'fs'
 import { segment } from "oicq";
 import { createRequire } from "module";
 import cfg from '../../lib/config/config.js'
+import fetch from "node-fetch"
 //const require = createRequire(import.meta.url);
 
 //const axios = require('axios');
@@ -104,7 +105,7 @@ export class example extends plugin {
         //await this.reply((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``));
         let message = []
         await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
-        await message.push(`玩家名：${JSON.stringify(jsonobj.userName)}\n玩家等级：${JSON.stringify(jsonobj.rank)}\n技巧值：${JSON.stringify(jsonobj.skill)}\n每分钟得分：${JSON.stringify(jsonobj.scorePerMinute)}\n每分钟击杀：${JSON.stringify(jsonobj.killsPerMinute)}\n胜率：${JSON.stringify(jsonobj.winPercent)}\n最佳兵种：${JSON.stringify(jsonobj.bestClass)}\n准度：${JSON.stringify(jsonobj.accuracy)}\n爆头率：${JSON.stringify(jsonobj.headshots)}\n爆头数：${JSON.stringify(jsonobj.headShots)}\n最远爆头：${JSON.stringify(jsonobj.longestHeadShot)}\n已游玩时间：${JSON.stringify(jsonobj.timePlayed)}\nKD比：${JSON.stringify(jsonobj.killDeath)}\n击杀数：${JSON.stringify(jsonobj.kills)}\n死亡数：${JSON.stringify(jsonobj.deaths)}\n最高连续击杀：${JSON.stringify(jsonobj.highestKillStreak)}\n助攻数：${JSON.stringify(jsonobj.killAssists)}\n救起数：${JSON.stringify(jsonobj.revives)}\n治疗量：${JSON.stringify(jsonobj.heals)}\n维修量：${JSON.stringify(jsonobj.repairs)}\n`)
+        await message.push(`\n玩家名：${JSON.stringify(jsonobj.userName)}\n玩家等级：${JSON.stringify(jsonobj.rank)}\n技巧值：${JSON.stringify(jsonobj.skill)}\n每分钟得分：${JSON.stringify(jsonobj.scorePerMinute)}\n每分钟击杀：${JSON.stringify(jsonobj.killsPerMinute)}\n胜率：${JSON.stringify(jsonobj.winPercent)}\n最佳兵种：${JSON.stringify(jsonobj.bestClass)}\n准度：${JSON.stringify(jsonobj.accuracy)}\n爆头率：${JSON.stringify(jsonobj.headshots)}\n爆头数：${JSON.stringify(jsonobj.headShots)}\n最远爆头：${JSON.stringify(jsonobj.longestHeadShot)}\n已游玩时间：${JSON.stringify(jsonobj.timePlayed)}\nKD比：${JSON.stringify(jsonobj.killDeath)}\n击杀数：${JSON.stringify(jsonobj.kills)}\n死亡数：${JSON.stringify(jsonobj.deaths)}\n最高连续击杀：${JSON.stringify(jsonobj.highestKillStreak)}\n助攻数：${JSON.stringify(jsonobj.killAssists)}\n救起数：${JSON.stringify(jsonobj.revives)}\n治疗量：${JSON.stringify(jsonobj.heals)}\n维修量：${JSON.stringify(jsonobj.repairs)}\n`)
         //const response2 = await axios.get(`https://api.gametools.network/bfban/checkban?names=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
         const response2 = await fetch(`https://api.gametools.network/bfban/checkban?names=${playerid}`, { "method": "GET" });
         var jsonobj2 = await response2.json();
@@ -186,10 +187,10 @@ export class example extends plugin {
             numres = Object.keys(jsonobj.vehicles).length
         }
         await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
-        await message.push(`玩家名：${JSON.stringify(jsonobj.userName)}\n共${Object.keys(jsonobj.vehicles).length}条信息，显示了${numres}条\n`)
+        await message.push(`\n玩家名：${JSON.stringify(jsonobj.userName)}\n共${Object.keys(jsonobj.vehicles).length}条信息，显示了${numres}条\n`)
         for (var i=0;i<numres;i++){
             await message.push(segment.image((JSON.stringify(jsonobj.vehicles[i].image)).replaceAll(`\"`, ``)))
-            await message.push(`载具名：${JSON.stringify(jsonobj.vehicles[i].vehicleName)}\n载具种类：${JSON.stringify(jsonobj.vehicles[i].type)}\n击杀数：${JSON.stringify(jsonobj.vehicles[i].kills)}\nKPM：${JSON.stringify(jsonobj.vehicles[i].killsPerMinute)}\n摧毁载具：${JSON.stringify(jsonobj.vehicles[i].destroyed)}\n乘坐时间：${JSON.stringify(jsonobj.vehicles[i].timeIn)}\n`)
+            await message.push(`\n载具名：${JSON.stringify(jsonobj.vehicles[i].vehicleName)}\n载具种类：${JSON.stringify(jsonobj.vehicles[i].type)}\n击杀数：${JSON.stringify(jsonobj.vehicles[i].kills)}\nKPM：${JSON.stringify(jsonobj.vehicles[i].killsPerMinute)}\n摧毁载具：${JSON.stringify(jsonobj.vehicles[i].destroyed)}\n乘坐时间：${JSON.stringify(jsonobj.vehicles[i].timeIn)}\n`)
         }
         message.push(`\n您还可以使用“#${version}carrier10条 您的ID”来自定义输出条数\n您可使用#bf help获得更多功能命令`)
         
@@ -266,10 +267,10 @@ export class example extends plugin {
             numres = Object.keys(jsonobj.weapons).length
         }
         await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
-        await message.push(`玩家名：${JSON.stringify(jsonobj.userName)}\n共${Object.keys(jsonobj.weapons).length}条信息，显示了${numres}条\n`)
+        await message.push(`\n玩家名：${JSON.stringify(jsonobj.userName)}\n共${Object.keys(jsonobj.weapons).length}条信息，显示了${numres}条\n`)
         for (var i=0;i<numres;i++){
             await message.push(segment.image((JSON.stringify(jsonobj.weapons[i].image)).replaceAll(`\"`, ``)))
-            await message.push(`武器名：${JSON.stringify(jsonobj.weapons[i].weaponName)}\n武器种类：${JSON.stringify(jsonobj.weapons[i].type)}\n击杀数：${JSON.stringify(jsonobj.weapons[i].kills)}\nKPM：${JSON.stringify(jsonobj.weapons[i].killsPerMinute)}\n准度：${JSON.stringify(jsonobj.weapons[i].accuracy)}\n爆头率：${JSON.stringify(jsonobj.weapons[i].headshots)}\n命中/击杀比：${JSON.stringify(jsonobj.weapons[i].hitVKills)}\n`)
+            await message.push(`\n武器名：${JSON.stringify(jsonobj.weapons[i].weaponName)}\n武器种类：${JSON.stringify(jsonobj.weapons[i].type)}\n击杀数：${JSON.stringify(jsonobj.weapons[i].kills)}\nKPM：${JSON.stringify(jsonobj.weapons[i].killsPerMinute)}\n准度：${JSON.stringify(jsonobj.weapons[i].accuracy)}\n爆头率：${JSON.stringify(jsonobj.weapons[i].headshots)}\n命中/击杀比：${JSON.stringify(jsonobj.weapons[i].hitVKills)}\n`)
         }
         message.push(`\n您还可以使用“#${version}weapon10条 您的ID”来自定义输出条数\n您可使用#bf help获得更多功能命令`)
         
@@ -318,10 +319,10 @@ export class example extends plugin {
         //await this.reply((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``));
         let message = []
         await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
-        await message.push(`玩家名：${JSON.stringify(jsonobj.userName)}\n`)
-        for (var i=0;i<7;i++){
+        await message.push(`\n玩家名：${JSON.stringify(jsonobj.userName)}\n`)
+        for (var i=0;i<Object.keys(jsonobj.classes).length;i++){
             await message.push(segment.image((JSON.stringify(jsonobj.classes[i].image)).replaceAll(`\"`, ``)))
-            await message.push(`兵种：${JSON.stringify(jsonobj.classes[i].className)}\n兵种得分：${JSON.stringify(jsonobj.classes[i].score)}\n击杀数：${JSON.stringify(jsonobj.classes[i].kills)}\nKPM：${JSON.stringify(jsonobj.classes[i].kpm)}\n游玩时间：${JSON.stringify(jsonobj.classes[i].timePlayed)}\n`)
+            await message.push(`\n兵种：${JSON.stringify(jsonobj.classes[i].className)}\n兵种得分：${JSON.stringify(jsonobj.classes[i].score)}\n击杀数：${JSON.stringify(jsonobj.classes[i].kills)}\nKPM：${JSON.stringify(jsonobj.classes[i].kpm)}\n游玩时间：${JSON.stringify(jsonobj.classes[i].timePlayed)}\n`)
         }
         message.push(`\n您可使用#bf help获得更多功能命令`)
         
