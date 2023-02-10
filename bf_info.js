@@ -40,23 +40,23 @@ export class example extends plugin {
             priority: 5000,
             rule: [
                 {
-                    reg: '^#?(B|b)(F|f)(1|v)(carriers?|vehicles?)(\d?\d?条)?.*$',
+                    reg: '^#?(B|b)(F|f)((1|v|V|5))( )*(carriers?|vehicles?)(\d?\d?条)?.*$',
                     fnc: 'bf_carrier'
                 },
                 {
-                    reg: '^#?(B|b)(F|f)(1|v)(weapons?)(\d?\d?条)?.*$',
+                    reg: '^#?(B|b)(F|f)((1|v|V|5))( )*(weapons?)(\d?\d?条)?.*$',
                     fnc: 'bf_weapon'
                 },
                 {
-                    reg: '^#?(B|b)(F|f)(1|v)(class(es)?).*$',
+                    reg: '^#?(B|b)(F|f)((1|v|V|5))( )*(class(es)?).*$',
                     fnc: 'bf_class'
                 },
                 {
-                    reg: '^#?(B|b)(F|f)(1|v).*$',
+                    reg: '^#?(B|b)(F|f)((1|v|V|5)).*$',
                     fnc: 'bf_base'
                 },
                 {
-                  reg: "^#?(B|b)(F|f)( help)?$",
+                  reg: "^#?(B|b)(F|f)( )*(help)?$",
                   fnc: 'bf_help'
                 },
                 {
@@ -70,11 +70,11 @@ export class example extends plugin {
 
     async bf_base(e) {
         await this.reply("正在查询综合战绩……");
-        let playerid = e.msg.replace(/#|(B|b)(F|f)(1|v)| /g, "")
+        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5))( )*(vehicles?\b|carriers?\b|weapons?\b|class(es)?\b)?( )*(\d?\d?条)?( )*/g, "")
         var version = ""
-        if(e.msg.search(/(B|b)(F|f)1/g)!=-1) version = "bf1"
-        if(e.msg.search(/(B|b)(F|f)v/g)!=-1) version = "bfv"
-        if (/(M|m)(E|e)/g.test(playerid)) {
+        if(e.msg.search(/^#?(B|b)(F|f)1/g)!=-1) version = "bf1"
+        if(e.msg.search(/^#?(B|b)(F|f)(v|V|5)/g)!=-1) version = "bfv"
+        if (/\b(M|m)(E|e)\b/g.test(playerid)) {
             var id = e.user_id
             var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
             if(json.hasOwnProperty(id)) {//如果json中存在该用户
@@ -105,13 +105,34 @@ export class example extends plugin {
         //await this.reply((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``));
         let message = []
         await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
-        await message.push(`\n玩家名：${JSON.stringify(jsonobj.userName)}\n玩家等级：${JSON.stringify(jsonobj.rank)}\n技巧值：${JSON.stringify(jsonobj.skill)}\n每分钟得分：${JSON.stringify(jsonobj.scorePerMinute)}\n每分钟击杀：${JSON.stringify(jsonobj.killsPerMinute)}\n胜率：${JSON.stringify(jsonobj.winPercent)}\n最佳兵种：${JSON.stringify(jsonobj.bestClass)}\n准度：${JSON.stringify(jsonobj.accuracy)}\n爆头率：${JSON.stringify(jsonobj.headshots)}\n爆头数：${JSON.stringify(jsonobj.headShots)}\n最远爆头：${JSON.stringify(jsonobj.longestHeadShot)}\n已游玩时间：${JSON.stringify(jsonobj.timePlayed)}\nKD比：${JSON.stringify(jsonobj.killDeath)}\n击杀数：${JSON.stringify(jsonobj.kills)}\n死亡数：${JSON.stringify(jsonobj.deaths)}\n最高连续击杀：${JSON.stringify(jsonobj.highestKillStreak)}\n助攻数：${JSON.stringify(jsonobj.killAssists)}\n救起数：${JSON.stringify(jsonobj.revives)}\n治疗量：${JSON.stringify(jsonobj.heals)}\n维修量：${JSON.stringify(jsonobj.repairs)}\n`)
+        await message.push(
+`玩家名：${JSON.stringify(jsonobj.userName)}
+玩家等级：${JSON.stringify(jsonobj.rank)}
+技巧值：${JSON.stringify(jsonobj.skill)}
+每分钟得分：${JSON.stringify(jsonobj.scorePerMinute)}
+每分钟击杀：${JSON.stringify(jsonobj.killsPerMinute)}
+胜率：${JSON.stringify(jsonobj.winPercent)}
+最佳兵种：${JSON.stringify(jsonobj.bestClass)}
+准度：${JSON.stringify(jsonobj.accuracy)}
+爆头率：${JSON.stringify(jsonobj.headshots)}
+爆头数：${JSON.stringify(jsonobj.headShots)}
+最远爆头：${JSON.stringify(jsonobj.longestHeadShot)}
+已游玩时间：${JSON.stringify(jsonobj.timePlayed)}
+KD比：${JSON.stringify(jsonobj.killDeath)}
+击杀数：${JSON.stringify(jsonobj.kills)}
+死亡数：${JSON.stringify(jsonobj.deaths)}
+最高连续击杀：${JSON.stringify(jsonobj.highestKillStreak)}
+助攻数：${JSON.stringify(jsonobj.killAssists)}
+救起数：${JSON.stringify(jsonobj.revives)}
+治疗量：${JSON.stringify(jsonobj.heals)}
+维修量：${JSON.stringify(jsonobj.repairs)}
+        `)
         //const response2 = await axios.get(`https://api.gametools.network/bfban/checkban?names=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
         const response2 = await fetch(`https://api.gametools.network/bfban/checkban?names=${playerid}`, { "method": "GET" });
         var jsonobj2 = await response2.json();
         for(var key in jsonobj2.names)
             message.push(`是否被联ban：${JSON.stringify(jsonobj2.names[key].hacker)}`)
-        message.push(`\n您可使用#bf help获得更多功能命令`)
+        message.push(`\n\n您可使用#bf help获得更多功能命令`)
         
         let forwardMsg = await this.makeForwardMsg(`以下是您查询的${version}玩家${playerid}的综合战绩：`, message)
         await this.reply(forwardMsg)
@@ -141,11 +162,11 @@ export class example extends plugin {
             else
                 await this.reply(`正在查询载具战绩,需要全部……`);
         }
-        let playerid = e.msg.replace(/#|(B|b)(F|f)(1|v)|carriers?|vehicles?| |\d?\d?条/g, "")
+        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5))( )*(vehicles?\b|carriers?\b|weapons?\b|class(es)?\b)?( )*(\d?\d?条)?( )*/g, "")
         var version = ""
-        if(e.msg.search(/(B|b)(F|f)1/g)!=-1) version = "bf1"
-        if(e.msg.search(/(B|b)(F|f)v/g)!=-1) version = "bfv"
-        if (/(M|m)(E|e)/g.test(playerid)) {
+        if(e.msg.search(/^#?(B|b)(F|f)1/g)!=-1) version = "bf1"
+        if(e.msg.search(/^#?(B|b)(F|f)(v|V|5)/g)!=-1) version = "bfv"
+        if (/\b(M|m)(E|e)\b/g.test(playerid)) {
             var id = e.user_id
             var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
             if(json.hasOwnProperty(id)) {//如果json中存在该用户
@@ -190,7 +211,14 @@ export class example extends plugin {
         await message.push(`\n玩家名：${JSON.stringify(jsonobj.userName)}\n共${Object.keys(jsonobj.vehicles).length}条信息，显示了${numres}条\n`)
         for (var i=0;i<numres;i++){
             await message.push(segment.image((JSON.stringify(jsonobj.vehicles[i].image)).replaceAll(`\"`, ``)))
-            await message.push(`\n载具名：${JSON.stringify(jsonobj.vehicles[i].vehicleName)}\n载具种类：${JSON.stringify(jsonobj.vehicles[i].type)}\n击杀数：${JSON.stringify(jsonobj.vehicles[i].kills)}\nKPM：${JSON.stringify(jsonobj.vehicles[i].killsPerMinute)}\n摧毁载具：${JSON.stringify(jsonobj.vehicles[i].destroyed)}\n乘坐时间：${JSON.stringify(jsonobj.vehicles[i].timeIn)}\n`)
+            await message.push(`
+载具名：${JSON.stringify(jsonobj.vehicles[i].vehicleName)}
+载具种类：${JSON.stringify(jsonobj.vehicles[i].type)}
+击杀数：${JSON.stringify(jsonobj.vehicles[i].kills)}
+KPM：${JSON.stringify(jsonobj.vehicles[i].killsPerMinute)}
+摧毁载具：${JSON.stringify(jsonobj.vehicles[i].destroyed)}
+乘坐时间：${JSON.stringify(jsonobj.vehicles[i].timeIn)}\n
+            `)
         }
         message.push(`\n您还可以使用“#${version}carrier10条 您的ID”来自定义输出条数\n您可使用#bf help获得更多功能命令`)
         
@@ -221,11 +249,11 @@ export class example extends plugin {
             else
                 await this.reply(`正在查询武器战绩,需要全部……`);
         }
-        let playerid = e.msg.replace(/#|(B|b)(F|f)(1|v)|weapons?| |\d?\d?条/g, "")
+        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5))( )*(vehicles?\b|carriers?\b|weapons?\b|class(es)?\b)?( )*(\d?\d?条)?( )*/g, "")
         var version = ""
-        if(e.msg.search(/(B|b)(F|f)1/g)!=-1) version = "bf1"
-        if(e.msg.search(/(B|b)(F|f)v/g)!=-1) version = "bfv"
-        if (/(M|m)(E|e)/g.test(playerid)) {
+        if(e.msg.search(/^#?(B|b)(F|f)1/g)!=-1) version = "bf1"
+        if(e.msg.search(/^#?(B|b)(F|f)(v|V|5)/g)!=-1) version = "bfv"
+        if (/\b(M|m)(E|e)\b/g.test(playerid)) {
             var id = e.user_id
             var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
             if(json.hasOwnProperty(id)) {//如果json中存在该用户
@@ -270,7 +298,15 @@ export class example extends plugin {
         await message.push(`\n玩家名：${JSON.stringify(jsonobj.userName)}\n共${Object.keys(jsonobj.weapons).length}条信息，显示了${numres}条\n`)
         for (var i=0;i<numres;i++){
             await message.push(segment.image((JSON.stringify(jsonobj.weapons[i].image)).replaceAll(`\"`, ``)))
-            await message.push(`\n武器名：${JSON.stringify(jsonobj.weapons[i].weaponName)}\n武器种类：${JSON.stringify(jsonobj.weapons[i].type)}\n击杀数：${JSON.stringify(jsonobj.weapons[i].kills)}\nKPM：${JSON.stringify(jsonobj.weapons[i].killsPerMinute)}\n准度：${JSON.stringify(jsonobj.weapons[i].accuracy)}\n爆头率：${JSON.stringify(jsonobj.weapons[i].headshots)}\n命中/击杀比：${JSON.stringify(jsonobj.weapons[i].hitVKills)}\n`)
+            await message.push(`
+武器名：${JSON.stringify(jsonobj.weapons[i].weaponName)}
+武器种类：${JSON.stringify(jsonobj.weapons[i].type)}
+击杀数：${JSON.stringify(jsonobj.weapons[i].kills)}
+KPM：${JSON.stringify(jsonobj.weapons[i].killsPerMinute)}
+准度：${JSON.stringify(jsonobj.weapons[i].accuracy)}
+爆头率：${JSON.stringify(jsonobj.weapons[i].headshots)}
+命中/击杀比：${JSON.stringify(jsonobj.weapons[i].hitVKills)}\n
+            `)
         }
         message.push(`\n您还可以使用“#${version}weapon10条 您的ID”来自定义输出条数\n您可使用#bf help获得更多功能命令`)
         
@@ -284,11 +320,11 @@ export class example extends plugin {
     
     async bf_class(e) {
         await this.reply("正在查询兵种战绩……");
-        let playerid = e.msg.replace(/#|(B|b)(F|f)(1|v)| |class(es)?|/g, "")
+        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5))( )*(vehicles?\b|carriers?\b|weapons?\b|class(es)?\b)?( )*(\d?\d?条)?( )*/g, "")
         var version = ""
-        if(e.msg.search(/(B|b)(F|f)1/g)!=-1) version = "bf1"
-        if(e.msg.search(/(B|b)(F|f)v/g)!=-1) version = "bfv"
-        if (/(M|m)(E|e)/g.test(playerid)) {
+        if(e.msg.search(/^#?(B|b)(F|f)1/g)!=-1) version = "bf1"
+        if(e.msg.search(/^#?(B|b)(F|f)(v|V|5)/g)!=-1) version = "bfv"
+        if (/\b(M|m)(E|e)\b/g.test(playerid)) {
             var id = e.user_id
             var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
             if(json.hasOwnProperty(id)) {//如果json中存在该用户
@@ -322,7 +358,13 @@ export class example extends plugin {
         await message.push(`\n玩家名：${JSON.stringify(jsonobj.userName)}\n`)
         for (var i=0;i<Object.keys(jsonobj.classes).length;i++){
             await message.push(segment.image((JSON.stringify(jsonobj.classes[i].image)).replaceAll(`\"`, ``)))
-            await message.push(`\n兵种：${JSON.stringify(jsonobj.classes[i].className)}\n兵种得分：${JSON.stringify(jsonobj.classes[i].score)}\n击杀数：${JSON.stringify(jsonobj.classes[i].kills)}\nKPM：${JSON.stringify(jsonobj.classes[i].kpm)}\n游玩时间：${JSON.stringify(jsonobj.classes[i].timePlayed)}\n`)
+            await message.push(`
+\n兵种：${JSON.stringify(jsonobj.classes[i].className)}
+\n兵种得分：${JSON.stringify(jsonobj.classes[i].score)}
+\n击杀数：${JSON.stringify(jsonobj.classes[i].kills)}
+\nKPM：${JSON.stringify(jsonobj.classes[i].kpm)}
+\n游玩时间：${JSON.stringify(jsonobj.classes[i].timePlayed)}\n
+            `)
         }
         message.push(`\n您可使用#bf help获得更多功能命令`)
         
