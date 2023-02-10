@@ -12,6 +12,8 @@ import { segment } from "oicq";
 import { createRequire } from "module";
 import cfg from '../../lib/config/config.js'
 import fetch from "node-fetch"
+import lodash from 'lodash'
+import common from '../../lib/common/common.js'
 //const require = createRequire(import.meta.url);
 
 //const axios = require('axios');
@@ -359,11 +361,11 @@ KPM：${JSON.stringify(jsonobj.weapons[i].killsPerMinute)}
         for (var i=0;i<Object.keys(jsonobj.classes).length;i++){
             await message.push(segment.image((JSON.stringify(jsonobj.classes[i].image)).replaceAll(`\"`, ``)))
             await message.push(`
-\n兵种：${JSON.stringify(jsonobj.classes[i].className)}
-\n兵种得分：${JSON.stringify(jsonobj.classes[i].score)}
-\n击杀数：${JSON.stringify(jsonobj.classes[i].kills)}
-\nKPM：${JSON.stringify(jsonobj.classes[i].kpm)}
-\n游玩时间：${JSON.stringify(jsonobj.classes[i].timePlayed)}\n
+兵种：${JSON.stringify(jsonobj.classes[i].className)}
+兵种得分：${JSON.stringify(jsonobj.classes[i].score)}
+击杀数：${JSON.stringify(jsonobj.classes[i].kills)}
+KPM：${JSON.stringify(jsonobj.classes[i].kpm)}
+游玩时间：${JSON.stringify(jsonobj.classes[i].timePlayed)}\n
             `)
         }
         message.push(`\n您可使用#bf help获得更多功能命令`)
