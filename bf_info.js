@@ -42,19 +42,19 @@ export class example extends plugin {
             priority: 5000,
             rule: [
                 {
-                    reg: '^#?(B|b)(F|f)((1|v|V|5))( )*(carriers?|vehicles?)(\d?\d?条)?.*$',
+                    reg: '^#?(B|b)(F|f)((1|v|V|5|2042))( )*(carriers?|vehicles?)(\d?\d?条)?.*$',
                     fnc: 'bf_carrier'
                 },
                 {
-                    reg: '^#?(B|b)(F|f)((1|v|V|5))( )*(weapons?)(\d?\d?条)?.*$',
+                    reg: '^#?(B|b)(F|f)((1|v|V|5|2042))( )*(weapons?)(\d?\d?条)?.*$',
                     fnc: 'bf_weapon'
                 },
                 {
-                    reg: '^#?(B|b)(F|f)((1|v|V|5))( )*(class(es)?).*$',
+                    reg: '^#?(B|b)(F|f)((1|v|V|5|2042))( )*(class(es)?).*$',
                     fnc: 'bf_class'
                 },
                 {
-                    reg: '^#?(B|b)(F|f)((1|v|V|5)).*$',
+                    reg: '^#?(B|b)(F|f)((1|v|V|5|2042)).*$',
                     fnc: 'bf_base'
                 },
                 {
@@ -72,10 +72,11 @@ export class example extends plugin {
 
     async bf_base(e) {
         await this.reply("正在查询综合战绩……");
-        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5))( )*(vehicles?\b|carriers?\b|weapons?\b|class(es)?\b)?( )*(\d?\d?条)?( )*/g, "")
+        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?\b|carriers?\b|weapons?\b|class(es)?\b)?( )*(\d?\d?条)?( )*/g, "")
         var version = ""
         if(e.msg.search(/^#?(B|b)(F|f)1/g)!=-1) version = "bf1"
         if(e.msg.search(/^#?(B|b)(F|f)(v|V|5)/g)!=-1) version = "bfv"
+        if(e.msg.search(/^#?(B|b)(F|f)2042/g)!=-1) version = "bf2042"
         if (/\b(M|m)(E|e)\b/g.test(playerid)) {
             var id = e.user_id
             var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
@@ -113,6 +114,9 @@ export class example extends plugin {
 技巧值：${JSON.stringify(jsonobj.skill)}
 每分钟得分：${JSON.stringify(jsonobj.scorePerMinute)}
 每分钟击杀：${JSON.stringify(jsonobj.killsPerMinute)}
+每分钟伤害：${JSON.stringify(jsonobj.damagePerMinute)}
+每场击杀：${JSON.stringify(jsonobj.killsPerMatch)}
+每场伤害：${JSON.stringify(jsonobj.damagePerMatch)}
 胜率：${JSON.stringify(jsonobj.winPercent)}
 最佳兵种：${JSON.stringify(jsonobj.bestClass)}
 准度：${JSON.stringify(jsonobj.accuracy)}
@@ -121,6 +125,7 @@ export class example extends plugin {
 最远爆头：${JSON.stringify(jsonobj.longestHeadShot)}
 已游玩时间：${JSON.stringify(jsonobj.timePlayed)}
 KD比：${JSON.stringify(jsonobj.killDeath)}
+KD比(步兵)：${JSON.stringify(jsonobj.infantryKillDeath)}
 击杀数：${JSON.stringify(jsonobj.kills)}
 死亡数：${JSON.stringify(jsonobj.deaths)}
 最高连续击杀：${JSON.stringify(jsonobj.highestKillStreak)}
@@ -164,10 +169,11 @@ KD比：${JSON.stringify(jsonobj.killDeath)}
             else
                 await this.reply(`正在查询载具战绩,需要全部……`);
         }
-        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5))( )*(vehicles?\b|carriers?\b|weapons?\b|class(es)?\b)?( )*(\d?\d?条)?( )*/g, "")
+        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?\b|carriers?\b|weapons?\b|class(es)?\b)?( )*(\d?\d?条)?( )*/g, "")
         var version = ""
         if(e.msg.search(/^#?(B|b)(F|f)1/g)!=-1) version = "bf1"
         if(e.msg.search(/^#?(B|b)(F|f)(v|V|5)/g)!=-1) version = "bfv"
+        if(e.msg.search(/^#?(B|b)(F|f)2042/g)!=-1) version = "bf2042"
         if (/\b(M|m)(E|e)\b/g.test(playerid)) {
             var id = e.user_id
             var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
@@ -251,10 +257,11 @@ KPM：${JSON.stringify(jsonobj.vehicles[i].killsPerMinute)}
             else
                 await this.reply(`正在查询武器战绩,需要全部……`);
         }
-        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5))( )*(vehicles?\b|carriers?\b|weapons?\b|class(es)?\b)?( )*(\d?\d?条)?( )*/g, "")
+        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?\b|carriers?\b|weapons?\b|class(es)?\b)?( )*(\d?\d?条)?( )*/g, "")
         var version = ""
         if(e.msg.search(/^#?(B|b)(F|f)1/g)!=-1) version = "bf1"
         if(e.msg.search(/^#?(B|b)(F|f)(v|V|5)/g)!=-1) version = "bfv"
+        if(e.msg.search(/^#?(B|b)(F|f)2042/g)!=-1) version = "bf2042"
         if (/\b(M|m)(E|e)\b/g.test(playerid)) {
             var id = e.user_id
             var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
@@ -322,10 +329,11 @@ KPM：${JSON.stringify(jsonobj.weapons[i].killsPerMinute)}
     
     async bf_class(e) {
         await this.reply("正在查询兵种战绩……");
-        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5))( )*(vehicles?\b|carriers?\b|weapons?\b|class(es)?\b)?( )*(\d?\d?条)?( )*/g, "")
+        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?\b|carriers?\b|weapons?\b|class(es)?\b)?( )*(\d?\d?条)?( )*/g, "")
         var version = ""
         if(e.msg.search(/^#?(B|b)(F|f)1/g)!=-1) version = "bf1"
         if(e.msg.search(/^#?(B|b)(F|f)(v|V|5)/g)!=-1) version = "bfv"
+        if(e.msg.search(/^#?(B|b)(F|f)2042/g)!=-1) version = "bf2042"
         if (/\b(M|m)(E|e)\b/g.test(playerid)) {
             var id = e.user_id
             var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
@@ -360,6 +368,7 @@ KPM：${JSON.stringify(jsonobj.weapons[i].killsPerMinute)}
         await message.push(`\n玩家名：${JSON.stringify(jsonobj.userName)}\n`)
         for (var i=0;i<Object.keys(jsonobj.classes).length;i++){
             await message.push(segment.image((JSON.stringify(jsonobj.classes[i].image)).replaceAll(`\"`, ``)))
+            if (version=="bf2042"){message.push(`角色名：${JSON.stringify(jsonobj.classes[i].characterName)}`)}
             await message.push(`
 兵种：${JSON.stringify(jsonobj.classes[i].className)}
 兵种得分：${JSON.stringify(jsonobj.classes[i].score)}
@@ -437,6 +446,6 @@ KPM：${JSON.stringify(jsonobj.classes[i].kpm)}
   }
   
   async bf_help(e){
-      await e.reply("发送 #bf绑定id 你的ID 将您的QQ与战地ID绑定\n发送 #bf1/v 你的ID 查看基本战绩\n发送 #bf1/vweapon 你的ID 查看武器战绩\n发送 #bf1/vvehicles 你的ID 查看载具战绩\n发送 #bf1/vclass 你的ID 查看兵种战绩\n将 你的ID 替换成 me 可使用绑定的ID进行查询")
+      await e.reply("发送 #bf绑定id 你的ID 将您的QQ与战地ID绑定\n发送 #bf1/v/2042 你的ID 查看基本战绩\n发送 #bf1/v/2042 weapon 你的ID 查看武器战绩\n发送 #bf1/v/2042 vehicles 你的ID 查看载具战绩\n发送 #bf1/v/2042 class 你的ID 查看兵种战绩\n将 你的ID 替换成 me 可使用绑定的ID进行查询")
   }
 }
