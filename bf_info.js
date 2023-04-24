@@ -72,7 +72,7 @@ export class example extends plugin {
 
     async bf_base(e) {
         await this.reply("正在查询综合战绩……");
-        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?\b|carriers?\b|weapons?\b|class(es)?\b)?( )*(\d?\d?条)?( )*/g, "")
+        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?|carriers?|weapons?|class(es)?)?(\d?\d?条)?( )*/g, "")
         var version = ""
         if(e.msg.search(/^#?(B|b)(F|f)1/g)!=-1) version = "bf1"
         if(e.msg.search(/^#?(B|b)(F|f)(v|V|5)/g)!=-1) version = "bfv"
@@ -169,7 +169,7 @@ KD比(步兵)：${JSON.stringify(jsonobj.infantryKillDeath)}
             else
                 await this.reply(`正在查询载具战绩,需要全部……`);
         }
-        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?\b|carriers?\b|weapons?\b|class(es)?\b)?( )*(\d?\d?条)?( )*/g, "")
+        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?|carriers?|weapons?|class(es)?)?(\d?\d?条)?( )*/g, "")
         var version = ""
         if(e.msg.search(/^#?(B|b)(F|f)1/g)!=-1) version = "bf1"
         if(e.msg.search(/^#?(B|b)(F|f)(v|V|5)/g)!=-1) version = "bfv"
@@ -257,7 +257,7 @@ KPM：${JSON.stringify(jsonobj.vehicles[i].killsPerMinute)}
             else
                 await this.reply(`正在查询武器战绩,需要全部……`);
         }
-        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?\b|carriers?\b|weapons?\b|class(es)?\b)?( )*(\d?\d?条)?( )*/g, "")
+        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?|carriers?|weapons?|class(es)?)?(\d?\d?条)?( )*/g, "")
         var version = ""
         if(e.msg.search(/^#?(B|b)(F|f)1/g)!=-1) version = "bf1"
         if(e.msg.search(/^#?(B|b)(F|f)(v|V|5)/g)!=-1) version = "bfv"
@@ -329,7 +329,7 @@ KPM：${JSON.stringify(jsonobj.weapons[i].killsPerMinute)}
     
     async bf_class(e) {
         await this.reply("正在查询兵种战绩……");
-        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?\b|carriers?\b|weapons?\b|class(es)?\b)?( )*(\d?\d?条)?( )*/g, "")
+        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?|carriers?|weapons?|class(es)?)?(\d?\d?条)?( )*/g, "")
         var version = ""
         if(e.msg.search(/^#?(B|b)(F|f)1/g)!=-1) version = "bf1"
         if(e.msg.search(/^#?(B|b)(F|f)(v|V|5)/g)!=-1) version = "bfv"
