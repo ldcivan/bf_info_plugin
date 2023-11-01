@@ -69,25 +69,39 @@ export class example extends plugin {
         })
     }
     
-
-    async bf_base(e) {
-        await this.reply("正在查询综合战绩……");
-        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?|carriers?|weapons?|class(es)?)?(\d?\d?条)?( )*/g, "")
-        var version = ""
-        if(e.msg.search(/^#?(B|b)(F|f)1/g)!=-1) version = "bf1"
-        if(e.msg.search(/^#?(B|b)(F|f)(v|V|5)/g)!=-1) version = "bfv"
-        if(e.msg.search(/^#?(B|b)(F|f)2042/g)!=-1) version = "bf2042"
-        if (/\b(M|m)(E|e)\b/g.test(playerid)) {
+    
+    async analysis_msg(msg,e) {
+        let get_id = msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?|carriers?|weapons?|class(es)?)?(\d?\d?条)?( )*/g, "");
+        let get_version = "";
+        if(msg.search(/^#?(B|b)(F|f)1/g)!=-1) {
+            lget_version = "bf1";
+        }
+        else if(msg.search(/^#?(B|b)(F|f)(v|V|5)/g)!=-1) {
+            get_version = "bfv";
+        }
+        else if(msg.search(/^#?(B|b)(F|f)2042/g)!=-1) {
+            get_version = "bf2042";
+        }
+        if (/\b(M|m)(E|e)\b/g.test(get_id)) {
             var id = e.user_id
             var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
             if(json.hasOwnProperty(id)) {//如果json中存在该用户
                 await this.reply("使用已记录的绑定的id")
-                playerid = JSON.stringify(json[id].bf_id).replace(/\"/g, "")
+                get_id = JSON.stringify(json[id].bf_id).replace(/\"/g, "")
             }
             else{
                 await this.reply("你在未绑定id的情况下使用了me\n请先用 #bf绑定id 来让bot记住你的战地id")
             }
         }
+        return [get_id, get_version];
+    }
+    
+
+    async bf_base(e) {
+        await this.reply("正在查询综合战绩……");
+        var analysis_msg = await this.analysis_msg(e.msg,e);
+        let playerid = analysis_msg[0];
+        let version = analysis_msg[1];
         await this.reply(`${playerid}-${version}`);
         var url = `https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`
         //try {
@@ -169,22 +183,9 @@ KD比(步兵)：${JSON.stringify(jsonobj.infantryKillDeath)}
             else
                 await this.reply(`正在查询载具战绩,需要全部……`);
         }
-        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?|carriers?|weapons?|class(es)?)?(\d?\d?条)?( )*/g, "")
-        var version = ""
-        if(e.msg.search(/^#?(B|b)(F|f)1/g)!=-1) version = "bf1"
-        if(e.msg.search(/^#?(B|b)(F|f)(v|V|5)/g)!=-1) version = "bfv"
-        if(e.msg.search(/^#?(B|b)(F|f)2042/g)!=-1) version = "bf2042"
-        if (/\b(M|m)(E|e)\b/g.test(playerid)) {
-            var id = e.user_id
-            var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
-            if(json.hasOwnProperty(id)) {//如果json中存在该用户
-                await this.reply("使用已记录的绑定的id")
-                playerid = JSON.stringify(json[id].bf_id).replace(/\"/g, "")
-            }
-            else{
-                await this.reply("你在未绑定id的情况下使用了me\n请先用 #bf绑定id 来让bot记住你的战地id")
-            }
-        }
+        var analysis_msg = await this.analysis_msg(e.msg,e);
+        let playerid = analysis_msg[0];
+        let version = analysis_msg[1];
         await this.reply(`${playerid}-${version}-${numres}条`);
         var url = `https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`
         //try {
@@ -257,22 +258,9 @@ KPM：${JSON.stringify(jsonobj.vehicles[i].killsPerMinute)}
             else
                 await this.reply(`正在查询武器战绩,需要全部……`);
         }
-        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?|carriers?|weapons?|class(es)?)?(\d?\d?条)?( )*/g, "")
-        var version = ""
-        if(e.msg.search(/^#?(B|b)(F|f)1/g)!=-1) version = "bf1"
-        if(e.msg.search(/^#?(B|b)(F|f)(v|V|5)/g)!=-1) version = "bfv"
-        if(e.msg.search(/^#?(B|b)(F|f)2042/g)!=-1) version = "bf2042"
-        if (/\b(M|m)(E|e)\b/g.test(playerid)) {
-            var id = e.user_id
-            var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
-            if(json.hasOwnProperty(id)) {//如果json中存在该用户
-                await this.reply("使用已记录的绑定的id")
-                playerid = JSON.stringify(json[id].bf_id).replace(/\"/g, "")
-            }
-            else{
-                await this.reply("你在未绑定id的情况下使用了me\n请先用 #bf绑定id 来让bot记住你的战地id")
-            }
-        }
+        var analysis_msg = await this.analysis_msg(e.msg,e);
+        let playerid = analysis_msg[0];
+        let version = analysis_msg[1];
         await this.reply(`${playerid}-${version}-${numres}条`);
         var url = `https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`
         //try {
@@ -329,22 +317,9 @@ KPM：${JSON.stringify(jsonobj.weapons[i].killsPerMinute)}
     
     async bf_class(e) {
         await this.reply("正在查询兵种战绩……");
-        let playerid = e.msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?|carriers?|weapons?|class(es)?)?(\d?\d?条)?( )*/g, "")
-        var version = ""
-        if(e.msg.search(/^#?(B|b)(F|f)1/g)!=-1) version = "bf1"
-        if(e.msg.search(/^#?(B|b)(F|f)(v|V|5)/g)!=-1) version = "bfv"
-        if(e.msg.search(/^#?(B|b)(F|f)2042/g)!=-1) version = "bf2042"
-        if (/\b(M|m)(E|e)\b/g.test(playerid)) {
-            var id = e.user_id
-            var json = JSON.parse(fs.readFileSync(dirpath + "/" + filename, "utf8"));//读取文件
-            if(json.hasOwnProperty(id)) {//如果json中存在该用户
-                await this.reply("使用已记录的绑定的id")
-                playerid = JSON.stringify(json[id].bf_id).replace(/\"/g, "")
-            }
-            else{
-                await this.reply("你在未绑定id的情况下使用了me\n请先用 #bf绑定id 来让bot记住你的战地id")
-            }
-        }
+        var analysis_msg = await this.analysis_msg(e.msg,e);
+        let playerid = analysis_msg[0];
+        let version = analysis_msg[1];
         await this.reply(`${playerid}-${version}`);
         var url = `https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`
         //try {
@@ -363,6 +338,10 @@ KPM：${JSON.stringify(jsonobj.weapons[i].killsPerMinute)}
             return
         }
         //await this.reply((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``));
+        function down(a, b) {
+            return b.kills-a.kills
+        }
+        jsonobj.classes.sort(down) //按击杀排序
         let message = []
         await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
         await message.push(`\n玩家名：${JSON.stringify(jsonobj.userName)}\n`)
@@ -424,6 +403,7 @@ KPM：${JSON.stringify(jsonobj.classes[i].kpm)}
       .replace(/<title color="#777777" size="26">(.+?)<\/title>/g, '___')
       .replace(/___+/, `<title color="#777777" size="26">${title}</title>`)
     forwardMsg.data = JSON.parse(forwardMsg.data)
+
     return forwardMsg
   }
   
