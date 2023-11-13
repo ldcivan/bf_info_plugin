@@ -74,7 +74,7 @@ export class example extends plugin {
         let get_id = msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?|carriers?|weapons?|class(es)?)?(\d?\d?条)?( )*/g, "");
         let get_version = "";
         if(msg.search(/^#?(B|b)(F|f)1/g)!=-1) {
-            lget_version = "bf1";
+            get_version = "bf1";
         }
         else if(msg.search(/^#?(B|b)(F|f)(v|V|5)/g)!=-1) {
             get_version = "bfv";
