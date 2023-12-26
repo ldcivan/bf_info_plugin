@@ -29,8 +29,9 @@ if (!fs.existsSync(dirpath + "/" + filename)) {
     }))
 }
 
-var limit = 1 //是否限制武器载具信息输出个数
-var output_amount = 8 //武器载具信息最多输出几个  我个人建议限制在5-10个，不然输出太慢了
+var limit = 1; //是否限制武器载具信息输出个数
+var output_amount = 8; //武器载具信息最多输出几个  我个人建议限制在5-10个，不然输出太慢了
+var api_base_url = "https://api.gametools.network"; //允许自定api代理地址防止拉取慢
 if (limit==1)
     var numres = output_amount
     
@@ -103,15 +104,15 @@ export class example extends plugin {
         let playerid = analysis_msg[0];
         let version = analysis_msg[1];
         await this.reply(`${playerid}-${version}`);
-        var url = `https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`
+        var url = api_base_url + `/${version}/all/?name=${playerid}&lang=zh-tw`
         //try {
-            //const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
+            //const response = await axios.get(api_base_url + `/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
         //} catch (e) {
        //     await this.reply("404，可能是查无此人：\n"+e)
         //    console.log("发生异常:" + e)
         //    return
         //}
-        //const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
+        //const response = await axios.get(api_base_url + `/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
         //var jsonobj = response.data;
         const response = await fetch(url, { "method": "GET" });
         var jsonobj = await response.json();
@@ -148,8 +149,8 @@ KD比(步兵)：${JSON.stringify(jsonobj.infantryKillDeath)}
 治疗量：${JSON.stringify(jsonobj.heals)}
 维修量：${JSON.stringify(jsonobj.repairs)}
         `)
-        //const response2 = await axios.get(`https://api.gametools.network/bfban/checkban?names=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
-        const response2 = await fetch(`https://api.gametools.network/bfban/checkban?names=${playerid}`, { "method": "GET" });
+        //const response2 = await axios.get(api_base_url + `/bfban/checkban?names=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
+        const response2 = await fetch(api_base_url + `/bfban/checkban?names=${playerid}`, { "method": "GET" });
         var jsonobj2 = await response2.json();
         for(var key in jsonobj2.names)
             message.push(`是否被联ban：${JSON.stringify(jsonobj2.names[key].hacker)}`)
@@ -187,15 +188,15 @@ KD比(步兵)：${JSON.stringify(jsonobj.infantryKillDeath)}
         let playerid = analysis_msg[0];
         let version = analysis_msg[1];
         await this.reply(`${playerid}-${version}-${numres}条`);
-        var url = `https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`
+        var url = api_base_url + `/${version}/all/?name=${playerid}&lang=zh-tw`
         //try {
-            //const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
+            //const response = await axios.get(api_base_url + `/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
         //} catch (e) {
        //     await this.reply("404，可能是查无此人：\n"+e)
         //    console.log("发生异常:" + e)
         //    return
         //}
-        //const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
+        //const response = await axios.get(api_base_url + `/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
         //var jsonobj = response.data;
         const response = await fetch(url, { "method": "GET" });
         var jsonobj = await response.json();
@@ -262,15 +263,15 @@ KPM：${JSON.stringify(jsonobj.vehicles[i].killsPerMinute)}
         let playerid = analysis_msg[0];
         let version = analysis_msg[1];
         await this.reply(`${playerid}-${version}-${numres}条`);
-        var url = `https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`
+        var url = api_base_url + `/${version}/all/?name=${playerid}&lang=zh-tw`
         //try {
-            //const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
+            //const response = await axios.get(api_base_url + `/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
         //} catch (e) {
        //     await this.reply("404，可能是查无此人：\n"+e)
         //    console.log("发生异常:" + e)
         //    return
         //}
-        //const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
+        //const response = await axios.get(api_base_url + `/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
         //var jsonobj = response.data;
         const response = await fetch(url, { "method": "GET" });
         var jsonobj = await response.json();
@@ -321,15 +322,15 @@ KPM：${JSON.stringify(jsonobj.weapons[i].killsPerMinute)}
         let playerid = analysis_msg[0];
         let version = analysis_msg[1];
         await this.reply(`${playerid}-${version}`);
-        var url = `https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`
+        var url = api_base_url + `/${version}/all/?name=${playerid}&lang=zh-tw`
         //try {
-            //const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
+            //const response = await axios.get(api_base_url + `/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
         //} catch (e) {
        //     await this.reply("404，可能是查无此人：\n"+e)
         //    console.log("发生异常:" + e)
         //    return
         //}
-        //const response = await axios.get(`https://api.gametools.network/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
+        //const response = await axios.get(api_base_url + `/${version}/all/?name=${playerid}&lang=zh-tw`,{headers: { "Accept-Encoding": "gzip,deflate,compress" }})
         //var jsonobj = response.data;
         const response = await fetch(url, { "method": "GET" });
         var jsonobj = await response.json();
