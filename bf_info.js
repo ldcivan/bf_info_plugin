@@ -18,7 +18,7 @@ import common from '../../lib/common/common.js'
 
 //const axios = require('axios');
 
-const dirpath = "plugins/example/bf_info"
+const dirpath = "data/bf_info"
 var filename = `bf_info.json`
 if (!fs.existsSync(dirpath)) {//如果文件夹不存在
 	fs.mkdirSync(dirpath);//创建文件夹
