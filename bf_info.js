@@ -63,7 +63,7 @@ export class example extends plugin {
                   fnc: 'bf_help'
                 },
                 {
-                  reg: "^#?(B|b)(F|f)绑定(I|i)?(D|d)?.*$",
+                  reg: "^#?(B|b)(F|f)( )*绑定(I|i)?(D|d)?.*$",
                   fnc: 'bf_creat'
                 }
             ]
