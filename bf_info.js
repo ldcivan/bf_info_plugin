@@ -43,15 +43,15 @@ export class example extends plugin {
             priority: 5000,
             rule: [
                 {
-                    reg: '^#?(B|b)(F|f)((1|v|V|5|2042))( )*(carriers?|vehicles?)(\d?\d?条)?.*$',
+                    reg: '^#?(B|b)(F|f)((1|v|V|5|2042)).*(((carriers?|vehicles?)( )*(\d?\d?条)?)|((\d?\d?条)?( )*(carriers?|vehicles?))).*$',
                     fnc: 'bf_carrier'
                 },
                 {
-                    reg: '^#?(B|b)(F|f)((1|v|V|5|2042))( )*(weapons?)(\d?\d?条)?.*$',
+                    reg: '^#?(B|b)(F|f)((1|v|V|5|2042)).*(((weapons?)( )*(\d?\d?条)?)|((\d?\d?条)?( )*(weapons?))).*$',
                     fnc: 'bf_weapon'
                 },
                 {
-                    reg: '^#?(B|b)(F|f)((1|v|V|5|2042))( )*(class(es)?).*$',
+                    reg: '^#?(B|b)(F|f)((1|v|V|5|2042)).*(class(es)?).*$',
                     fnc: 'bf_class'
                 },
                 {
@@ -72,7 +72,7 @@ export class example extends plugin {
     
     
     async analysis_msg(msg,e) {
-        let get_id = msg.replace(/#|(B|b)(F|f)((1|v|V|5|2042))( )*(vehicles?|carriers?|weapons?|class(es)?)?(\d?\d?条)?( )*/g, "");
+        let get_id = msg.replace(/#?(B|b)(F|f)((1|v|V|5|2042))( )*/g, "").replace(/( )*(vehicles?|carriers?|weapons?|class(es)?)?( )*/g, "").replace(/( )*(\d?\d?条)?( )*/g, "");
         let get_version = "";
         if(msg.search(/^#?(B|b)(F|f)1/g)!=-1) {
             get_version = "bf1";
@@ -214,7 +214,11 @@ KD比(步兵)：${JSON.stringify(jsonobj.infantryKillDeath)}
             var numres=Object.keys(jsonobj.vehicles).length
         }
         if(numres > Object.keys(jsonobj.vehicles).length){
-            await this.reply(`需要条数越界，已更正为最大值`)
+            await this.reply(`需要条数越界，已更正为最大值（${Object.keys(jsonobj.vehicles).length}条）`)
+            numres = Object.keys(jsonobj.vehicles).length
+        }
+        if(numres == 0){
+            await this.reply(`你选择了拉取全部信息（${Object.keys(jsonobj.vehicles).length}条），这可能导致响应时间较长，请耐心等待`)
             numres = Object.keys(jsonobj.vehicles).length
         }
         await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
@@ -230,7 +234,7 @@ KPM：${JSON.stringify(jsonobj.vehicles[i].killsPerMinute)}
 乘坐时间：${JSON.stringify(jsonobj.vehicles[i].timeIn)}\n
             `)
         }
-        message.push(`\n您还可以使用“#${version}carrier10条 您的ID”来自定义输出条数\n您可使用#bf help获得更多功能命令`)
+        message.push(`\n您还可以使用“#${version} carrier 10条 您的ID”来自定义输出条数\n您可使用#bf help获得更多功能命令`)
         
         let forwardMsg = await this.makeForwardMsg(`以下是您查询的${version}玩家${playerid}的载具战绩：`, message)
         await this.reply(forwardMsg)
@@ -289,7 +293,11 @@ KPM：${JSON.stringify(jsonobj.vehicles[i].killsPerMinute)}
             var numres=Object.keys(jsonobj.weapon).length
         }
         if(numres>Object.keys(jsonobj.weapons).length){
-            await this.reply(`需要条数越界，已更正为最大值`)
+            await this.reply(`需要条数越界，已更正为最大值（${Object.keys(jsonobj.weapons).length}条）`)
+            numres = Object.keys(jsonobj.weapons).length
+        }
+        if(numres == 0){
+            await this.reply(`你选择了拉取全部信息（${Object.keys(jsonobj.weapons).length}条），这可能导致响应时间较长甚至无响应，请耐心等待`)
             numres = Object.keys(jsonobj.weapons).length
         }
         await message.push(segment.image((JSON.stringify(jsonobj.avatar)).replaceAll(`\"`, ``)))
@@ -306,7 +314,7 @@ KPM：${JSON.stringify(jsonobj.weapons[i].killsPerMinute)}
 命中/击杀比：${JSON.stringify(jsonobj.weapons[i].hitVKills)}\n
             `)
         }
-        message.push(`\n您还可以使用“#${version}weapon10条 您的ID”来自定义输出条数\n您可使用#bf help获得更多功能命令`)
+        message.push(`\n您还可以使用“#${version} weapon 10条 您的ID”来自定义输出条数\n您可使用#bf help获得更多功能命令`)
         
         let forwardMsg = await this.makeForwardMsg(`以下是您查询的${version}玩家${playerid}的武器战绩：`, message)
         await this.reply(forwardMsg)
@@ -428,6 +436,6 @@ KPM：${JSON.stringify(jsonobj.classes[i].kpm)}
   }
   
   async bf_help(e){
-      await e.reply("发送 #bf绑定id 你的ID 将您的QQ与战地ID绑定\n发送 #bf1/v/2042 你的ID 查看基本战绩\n发送 #bf1/v/2042 weapon 你的ID 查看武器战绩\n发送 #bf1/v/2042 vehicles 你的ID 查看载具战绩\n发送 #bf1/v/2042 class 你的ID 查看兵种战绩\n将 你的ID 替换成 me 可使用绑定的ID进行查询")
+      await e.reply("发送 #bf绑定id 你的ID 将您的QQ与战地ID绑定\n发送 #bf1/v/2042 你的ID 查看基本战绩\n发送 #bf1/v/2042 weapon 你的ID 查看武器战绩\n发送 #bf1/v/2042 vehicles 你的ID 查看载具战绩\n发送 #bf1/v/2042 class 你的ID 查看兵种战绩\n将 你的ID 替换成 me 可使用绑定的ID进行查询\n武器与载具查询可在weapon/vehicles后加 x条 以自定拉取的信息条数，定义 0条 则拉取全部")
   }
 }
