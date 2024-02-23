@@ -417,7 +417,7 @@ KPM：${JSON.stringify(jsonobj.classes[i].kpm)}
   }
   
   async bf_creat(e){
-    var bf_id = e.msg.replace(/#?(B|b)(F|f)( )*绑定(I|i)?(D|d)?/g, "")
+    var bf_id = e.msg.replace(/#?(B|b)(F|f)( )*绑定(I|i)?(D|d)?( )*/g, "")
     var data = {
     "bf_id": bf_id,
     }
